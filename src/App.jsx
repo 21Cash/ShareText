@@ -6,6 +6,7 @@ import Signup from "./Components/Signup/Signup";
 
 import database from "./constants";
 import Debug from "./Components/Debug/Debug";
+import TextEditor from "./Components/TextEditor/TextEditor";
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/Debug" element={<Debug />} />
         <Route path="/Signup" element={<Signup />} />
+        <Route path="/PostText" element={<TextEditor />} />
       </Routes>
+      <Debug />
     </BrowserRouter>
   );
 }

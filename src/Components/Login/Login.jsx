@@ -1,15 +1,18 @@
 // Login.jsx
 
 import React, { useState } from "react";
+import { signInUser } from "../../UserAuth";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = () => {
-    // Add your authentication logic here
-    console.log("Email:", email);
-    console.log("Password:", password);
+    signInUser(email, password).then(() => {
+      navigate("/Homepage");
+    });
   };
 
   return (

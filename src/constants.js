@@ -10,6 +10,8 @@ const firebaseConfig = {
   messagingSenderId: "796140934378",
   appId: "1:796140934378:web:0e392b13f403314035b393",
   measurementId: "G-JQ5E5WFX86",
+  databaseURL:
+    "https://textshare-37fab-default-rtdb.asia-southeast1.firebasedatabase.app/",
 };
 
 const database = initializeApp(firebaseConfig);

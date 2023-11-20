@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { signUpUser } from "../../UserAuth";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSignup = () => {
-    signUpUser(email, password);
+    signUpUser(email, password).then(() => {
+      navigate("/Homepage");
+    });
   };
 
   return (
