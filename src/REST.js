@@ -1,4 +1,4 @@
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, get, child } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 const UploadPost = async (postTitle, postText) => {
@@ -23,23 +23,25 @@ const UploadPost = async (postTitle, postText) => {
 };
 
 const getPost = async (postName) => {
-  const database = getDatabase();
+  const dbRef = ref(getDatabase());
 
-  const dbref = ref(database, "posts/" + postName);
+  console.log(`Trying to get Post With Name ${postName}`);
 
-  dbref
-    .once("value")
-    .then(function (snapshot) {
-      if (snapshot.exists()) {
-        var data = snapshot.val();
-        console.log(data);
-      } else {
-        console.log("No data available at the specified location.");
-      }
-    })
-    .catch(function (error) {
-      console.error("Error reading data:", error);
-    });
+  try {
+    const snapshot = await get(child(dbRef, `posts/${postName}`));
+
+    if (snapshot.exists()) {
+      const postData = snapshot.val();
+      console.log(`Returning ${postData.text}`);
+      return Promise.resolve(postData.text);
+    } else {
+      console.log("No data available");
+      return Promise.reject("No data available");
+    }
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
 };
 
 export { UploadPost, getPost };

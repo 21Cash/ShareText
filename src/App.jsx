@@ -21,15 +21,8 @@ function App() {
         <Route path="/Debug" element={<Debug />} />
         <Route path="/Signup" element={<Signup />} />
         <Route path="/TextEditor" element={<TextEditor />} />
-        <Route path="/ViewPost" element={<ViewPost />} />
-        <Route
-          path="/posts/:POSTNAME"
-          element={({ match }) => (
-            <TextEditor postName={match.params.POSTNAME} />
-          )}
-        />
+        <Route path="/viewpost/:postName" element={<ViewPost />} />
       </Routes>
-      <Debug />
     </BrowserRouter>
   );
 }

@@ -6,7 +6,12 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <div style={styles.navbar}>
-      <div style={styles.logo}>My Logo</div>
+      <div style={styles.logo}>
+        {" "}
+        <Link to="/Homepage" style={styles.link}>
+          ShareText
+        </Link>
+      </div>
       <div style={styles.navLinks}>
         <Link to="/Homepage" style={styles.link}>
           Home

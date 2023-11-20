@@ -6,11 +6,13 @@ import { useParams } from "react-router-dom";
 const TextEditor = ({ postName }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [pressed, setPressed] = useState(false);
   const textareaRef = useRef(null);
 
   useEffect(() => {
     console.log(postName);
   }, []);
+
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -29,10 +31,6 @@ const TextEditor = ({ postName }) => {
       padding: "16px",
       backgroundColor: "#f0f0f0",
     },
-    header: {
-      fontSize: "24px",
-      marginBottom: "16px",
-    },
     titleInput: {
       width: "100%",
       marginBottom: "8px",
@@ -43,10 +41,10 @@ const TextEditor = ({ postName }) => {
       border: "1px solid #ccc",
     },
     textEditor: {
-      width: "100%", // Set width to 100%
+      width: "100%",
       minHeight: "300px",
       padding: "16px",
-      paddingRight: "20px", // Add padding to the right
+      paddingRight: "20px",
       fontSize: "18px",
       fontFamily: "Arial, sans-serif",
       borderRadius: "8px",
@@ -56,7 +54,7 @@ const TextEditor = ({ postName }) => {
     },
     createPostButton: {
       marginTop: "16px",
-      marginLeft: "8px", // Move the button to the left
+      marginLeft: "8px",
       padding: "12px",
       fontSize: "18px",
       backgroundColor: "#4CAF50",
@@ -64,7 +62,17 @@ const TextEditor = ({ postName }) => {
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
+      transition: "transform 0.3s", // Add transition for a smooth effect
     },
+    createPostButtonPressed: {
+      transform: "scale(0.95)", // Decrease size when pressed
+    },
+  };
+
+  const handlePress = () => {
+    handleCreatePost();
+    setPressed(false);
+    // Additional logic or effects when the button is pressed
   };
 
   return (
@@ -84,7 +92,15 @@ const TextEditor = ({ postName }) => {
           onChange={handleInputChange}
           placeholder="Type your post here..."
         />
-        <button style={styles.createPostButton} onClick={handleCreatePost}>
+        <button
+          style={{
+            ...styles.createPostButton,
+            ...(pressed && styles.createPostButtonPressed),
+          }}
+          onClick={handlePress}
+          onMouseDown={() => setPressed(true)}
+          onMouseUp={() => setPressed(false)}
+        >
           Create Post
         </button>
       </div>

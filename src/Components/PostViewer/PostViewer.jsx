@@ -7,7 +7,7 @@ const PostViewer = () => {
 
   const handleViewPost = () => {
     // Navigate to the "/posts/FIELDTEXT" route
-    navigate(`/posts/${postName}`);
+    navigate(`/viewpost/${postName}`);
   };
 
   return (

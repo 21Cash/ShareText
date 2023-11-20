@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getPost } from "../../REST";
 
 const ViewPost = () => {
-  const [postTitle, setPostTitle] = useState("Your Post Title");
+  const { postName } = useParams();
   const [postText, setPostText] = useState("Your Post Text");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getPost(postName).then((result) => {
+      setPostText(result);
+      console.log(`Post Text updated TO ${result}`);
+    });
+  }, [postName]);
 
   return (
     <div>
-      <h1 style={titleStyle}>{postTitle}</h1>
+      <h1 style={titleStyle}>{postName}</h1>
       <div style={textAreaContainerStyle}>
         <textarea value={postText} readOnly style={textAreaStyle} />
       </div>
