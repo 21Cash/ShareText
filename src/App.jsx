@@ -18,7 +18,7 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/Debug" element={<Debug />} />
         <Route path="/Signup" element={<Signup />} />
-        <Route path="/PostText" element={<TextEditor />} />
+        <Route path="/TextEditor" element={<TextEditor />} />
       </Routes>
       <Debug />
     </BrowserRouter>

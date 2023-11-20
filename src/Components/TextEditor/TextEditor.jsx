@@ -1,27 +1,21 @@
 import React, { useState, useRef } from "react";
+import { UploadPost } from "../../REST";
 
 const TextEditor = () => {
+  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [isCopied, setIsCopied] = useState(false);
   const textareaRef = useRef(null);
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  };
 
   const handleInputChange = (event) => {
     setContent(event.target.value);
-    setIsCopied(false); // Reset the copied state when the content changes
   };
 
-  const handleCopyToClipboard = async () => {
-    if (textareaRef.current) {
-      try {
-        await navigator.clipboard.writeText(content);
-        setIsCopied(true);
-        setTimeout(() => {
-          setIsCopied(false);
-        }, 5000); // Reset the copied state after 5 seconds
-      } catch (err) {
-        console.error("Unable to copy to clipboard:", err);
-      }
-    }
+  const handleCreatePost = () => {
+    UploadPost(title, content);
   };
 
   const styles = {
@@ -30,10 +24,24 @@ const TextEditor = () => {
       padding: "16px",
       backgroundColor: "#f0f0f0",
     },
-    textEditor: {
+    header: {
+      fontSize: "24px",
+      marginBottom: "16px",
+    },
+    titleInput: {
       width: "100%",
+      marginBottom: "8px",
+      padding: "8px",
+      fontSize: "18px",
+      fontFamily: "Arial, sans-serif",
+      borderRadius: "4px",
+      border: "1px solid #ccc",
+    },
+    textEditor: {
+      width: "100%", // Set width to 100%
       minHeight: "300px",
       padding: "16px",
+      paddingRight: "20px", // Add padding to the right
       fontSize: "18px",
       fontFamily: "Arial, sans-serif",
       borderRadius: "8px",
@@ -41,47 +49,40 @@ const TextEditor = () => {
       outline: "none",
       resize: "vertical",
     },
-    copyButtonContainer: {
-      marginTop: "8px",
-      textAlign: "right",
-    },
-    copyButton: {
-      padding: "8px",
-      fontSize: "16px",
-      backgroundColor: isCopied ? "#4CAF50" : "#2196F3",
+    createPostButton: {
+      marginTop: "16px",
+      marginLeft: "8px", // Move the button to the left
+      padding: "12px",
+      fontSize: "18px",
+      backgroundColor: "#4CAF50",
       color: "white",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
     },
-    tickMark: {
-      marginRight: "8px",
-      animation: isCopied ? "tickMark 0.5s ease-in-out" : "none",
-    },
   };
 
   return (
-    <div style={styles.textEditorContainer}>
-      <textarea
-        ref={textareaRef}
-        style={styles.textEditor}
-        value={content}
-        onChange={handleInputChange}
-        placeholder="Type your text here..."
-      />
-      <div style={styles.copyButtonContainer}>
-        <button style={styles.copyButton} onClick={handleCopyToClipboard}>
-          <span style={styles.tickMark}>&#10003;</span>
-          {isCopied ? "Copied!" : "Copy to Clipboard"}
+    <div>
+      <div style={styles.textEditorContainer}>
+        <input
+          style={styles.titleInput}
+          type="text"
+          placeholder="Enter post title..."
+          value={title}
+          onChange={handleTitleChange}
+        />
+        <textarea
+          ref={textareaRef}
+          style={styles.textEditor}
+          value={content}
+          onChange={handleInputChange}
+          placeholder="Type your post here..."
+        />
+        <button style={styles.createPostButton} onClick={handleCreatePost}>
+          Create Post
         </button>
       </div>
-      <style>{`
-        @keyframes tickMark {
-          0% { transform: scaleX(0) }
-          50% { transform: scaleX(1.5) }
-          100% { transform: scaleX(1) }
-        }
-      `}</style>
     </div>
   );
 };

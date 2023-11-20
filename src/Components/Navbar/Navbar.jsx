@@ -11,7 +11,7 @@ const Navbar = () => {
         <Link to="/Homepage" style={styles.link}>
           Home
         </Link>
-        <a href="/Debug" style={styles.link}>
+        <a href="/Test" style={styles.link}>
           Test
         </a>
         <Link to="/Login" style={styles.link}>
