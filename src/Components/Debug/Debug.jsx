@@ -2,31 +2,10 @@ import React from "react";
 import { useEffect } from "react";
 import { getDatabase, ref, set } from "firebase/database";
 import { getAuth } from "firebase/auth";
-
-const uploadPost = () => {
-  const database = getDatabase();
-  const id = getAuth().currentUser.uid;
-  const postname = "XYZ OPSTO";
-  const postText = "This is qwdnoiqwndcqwedit\n";
-
-  const dbref = ref(database, "posts/" + postname);
-
-  set(dbref, {
-    uid: id,
-    text: postText,
-  });
-};
+import { getPost } from "../../REST";
 
 const testCode = () => {
-  // const db = getDatabase();
-  // const userId = "Laz";
-  // set(ref(db, "users/" + userId), {
-  //   username: "Cash",
-  //   email: "abc@cash.com",
-  // });
-  // console.log("data Pushed");
-
-  uploadPost();
+  getPost("Hello World");
 };
 
 const testCode2 = () => {

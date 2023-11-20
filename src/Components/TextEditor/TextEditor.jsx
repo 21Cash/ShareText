@@ -1,11 +1,16 @@
 import React, { useState, useRef } from "react";
+import { useEffect } from "react";
 import { UploadPost } from "../../REST";
+import { useParams } from "react-router-dom";
 
-const TextEditor = () => {
+const TextEditor = ({ postName }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const textareaRef = useRef(null);
 
+  useEffect(() => {
+    console.log(postName);
+  }, []);
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };

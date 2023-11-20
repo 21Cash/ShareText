@@ -22,4 +22,24 @@ const UploadPost = async (postTitle, postText) => {
   }
 };
 
-export { UploadPost };
+const getPost = async (postName) => {
+  const database = getDatabase();
+
+  const dbref = ref(database, "posts/" + postName);
+
+  dbref
+    .once("value")
+    .then(function (snapshot) {
+      if (snapshot.exists()) {
+        var data = snapshot.val();
+        console.log(data);
+      } else {
+        console.log("No data available at the specified location.");
+      }
+    })
+    .catch(function (error) {
+      console.error("Error reading data:", error);
+    });
+};
+
+export { UploadPost, getPost };

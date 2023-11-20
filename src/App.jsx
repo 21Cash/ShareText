@@ -7,6 +7,8 @@ import Signup from "./Components/Signup/Signup";
 import database from "./constants";
 import Debug from "./Components/Debug/Debug";
 import TextEditor from "./Components/TextEditor/TextEditor";
+import Post from "./Components/Post/Post";
+import ViewPost from "./Components/ViewPost/ViewPost";
 
 function App() {
   return (
@@ -19,6 +21,13 @@ function App() {
         <Route path="/Debug" element={<Debug />} />
         <Route path="/Signup" element={<Signup />} />
         <Route path="/TextEditor" element={<TextEditor />} />
+        <Route path="/ViewPost" element={<ViewPost />} />
+        <Route
+          path="/posts/:POSTNAME"
+          element={({ match }) => (
+            <TextEditor postName={match.params.POSTNAME} />
+          )}
+        />
       </Routes>
       <Debug />
     </BrowserRouter>
