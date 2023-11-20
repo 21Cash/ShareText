@@ -1,2 +1,3 @@
-# FrontendBase
-Boiler Plate For Frontend
+# ShareText
+
+Simple Text Share App

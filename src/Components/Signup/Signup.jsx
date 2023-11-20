@@ -1,21 +1,18 @@
-// Login.jsx
-
 import React, { useState } from "react";
+import { signUpUser } from "../../UserAuth";
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Add your authentication logic here
-    console.log("Email:", email);
-    console.log("Password:", password);
+  const handleSignup = () => {
+    signUpUser(email, password);
   };
 
   return (
     <div style={styles.background}>
       <div style={styles.container}>
-        <h2 style={styles.heading}>Login</h2>
+        <h2 style={styles.heading}>Signup</h2>
         <form style={styles.form}>
           <label style={styles.label} htmlFor="email">
             Email:
@@ -39,8 +36,8 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="button" style={styles.button} onClick={handleLogin}>
-            Login
+          <button type="button" style={styles.button} onClick={handleSignup}>
+            Signup
           </button>
         </form>
       </div>
@@ -93,4 +90,4 @@ const styles = {
   },
 };
 
-export default Login;
+export default Signup;
