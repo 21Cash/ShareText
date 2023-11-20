@@ -13,11 +13,8 @@ const Navbar = () => {
         </Link>
       </div>
       <div style={styles.navLinks}>
-        <Link to="/Homepage" style={styles.link}>
-          Home
-        </Link>
-        <a href="/Test" style={styles.link}>
-          Test
+        <a href="/Logout" style={styles.link}>
+          Logout
         </a>
         <Link to="/Login" style={styles.link}>
           Login

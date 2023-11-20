@@ -1,14 +1,16 @@
+import { getUA } from "@firebase/util";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const alertError = (error) => {
-  alert(`Signup Failed, errorCode : ${error.code}, msg : ${error.message}`);
+  alert(`errorCode : ${error.code}, msg : ${error.message}`);
 };
 
-export const signUpUser = async (email, password) => {
+const signUpUser = async (email, password) => {
   const auth = getAuth();
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -25,7 +27,7 @@ export const signUpUser = async (email, password) => {
   }
 };
 
-export const signInUser = async (email, password) => {
+const signInUser = async (email, password) => {
   const auth = getAuth();
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -41,3 +43,15 @@ export const signInUser = async (email, password) => {
     return Promise.reject(error);
   }
 };
+
+const logOutUser = async () => {
+  try {
+    await getAuth().signOut();
+    return Promise.resolve();
+  } catch (error) {
+    console.error("Error signing out:", error.message);
+    return Promise.reject();
+  }
+};
+
+export { signInUser, signUpUser, logOutUser };

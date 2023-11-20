@@ -1,6 +1,7 @@
 // Homepage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { postPresent } from "../../REST";
 const Homepage = () => {
   return (
     <>
@@ -77,7 +78,9 @@ const PostSearcher = () => {
   const navigate = useNavigate();
 
   const handleViewPost = () => {
-    navigate(`/viewpost/${postName}`);
+    postPresent(postName).then(() => {
+      navigate(`/viewpost/${postName}`);
+    });
   };
 
   const handleKeyPress = (e) => {
@@ -89,7 +92,6 @@ const PostSearcher = () => {
   return (
     <div style={styles.container}>
       <h2>View Post</h2>
-      {/* Post Name input field */}
       <input
         type="text"
         style={styles.postNameInput}

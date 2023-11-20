@@ -1,18 +1,14 @@
 import React, { useState, useRef } from "react";
 import { useEffect } from "react";
 import { UploadPost } from "../../REST";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 const TextEditor = ({ postName }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [pressed, setPressed] = useState(false);
   const textareaRef = useRef(null);
-
-  useEffect(() => {
-    console.log(postName);
-  }, []);
-
+  const navigate = useNavigate();
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -22,7 +18,14 @@ const TextEditor = ({ postName }) => {
   };
 
   const handleCreatePost = () => {
-    UploadPost(title, content);
+    UploadPost(title, content)
+      .then(() => {
+        navigate("/PostCreated");
+      })
+      .catch((error) => {
+        console.log("Failed To Create Post.");
+        alert(error);
+      });
   };
 
   const styles = {
