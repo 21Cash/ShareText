@@ -75,7 +75,6 @@ const TextEditor = ({ postName }) => {
   const handlePress = () => {
     handleCreatePost();
     setPressed(false);
-    // Additional logic or effects when the button is pressed
   };
 
   return (
