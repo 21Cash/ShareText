@@ -54,7 +54,7 @@ const Login = () => {
 const styles = {
   background: {
     background: "#f0f0f0",
-    height: "100vh",
+    height: "75vh",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
