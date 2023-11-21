@@ -35,7 +35,7 @@ const TextEditor = ({ postName }) => {
       backgroundColor: "#f0f0f0",
     },
     titleInput: {
-      width: "100%",
+      width: "99%",
       marginBottom: "8px",
       padding: "8px",
       fontSize: "18px",
@@ -44,7 +44,7 @@ const TextEditor = ({ postName }) => {
       border: "1px solid #ccc",
     },
     textEditor: {
-      width: "100%",
+      width: "97.4%",
       minHeight: "300px",
       padding: "16px",
       paddingRight: "20px",
