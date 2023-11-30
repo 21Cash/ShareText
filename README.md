@@ -3,4 +3,4 @@
 Simple Text Share Web App
 
 Hosted At : 
-https://share-text-seven.vercel.app/Homepage
+https://21share.vercel.app
