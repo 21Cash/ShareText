@@ -5,6 +5,7 @@ import { getPost } from "../../REST";
 const ViewPost = () => {
   const { postName } = useParams();
   const [postText, setPostText] = useState("Your Post Text");
+  const [copyButtonText, setCopyButtonText] = useState("Copy");
 
   useEffect(() => {
     getPost(postName).then((result) => {
@@ -13,11 +14,30 @@ const ViewPost = () => {
     });
   }, [postName]);
 
+  const handleCopyClick = () => {
+    navigator.clipboard
+      .writeText(postText)
+      .then(() => {
+        console.log("Text copied to clipboard!");
+        setCopyButtonText("Copied!");
+
+        setTimeout(() => {
+          setCopyButtonText("Copy");
+        }, 3000);
+      })
+      .catch((err) => {
+        console.error("Unable to copy text to clipboard.", err);
+      });
+  };
+
   return (
     <div>
       <h1 style={titleStyle}>{postName}</h1>
       <div style={textAreaContainerStyle}>
         <textarea value={postText} readOnly style={textAreaStyle} />
+        <button onClick={handleCopyClick} style={copyButtonStyle}>
+          {copyButtonText}
+        </button>
       </div>
     </div>
   );
@@ -26,14 +46,15 @@ const ViewPost = () => {
 const titleStyle = {
   fontSize: "24px",
   color: "#333",
-  marginLeft: "20px", // Adjust the left margin as needed
+  marginLeft: "20px",
 };
 
 const textAreaContainerStyle = {
   marginTop: "20px",
-  marginLeft: "20px", // Adjust the left margin as needed
-  maxWidth: "1200px", // Set a maximum width for the text editor container
-  marginRight: "50px", // Adjust the right margin as needed
+  marginLeft: "20px",
+  maxWidth: "1200px",
+  marginRight: "50px",
+  position: "relative",
 };
 
 const textAreaStyle = {
@@ -46,6 +67,19 @@ const textAreaStyle = {
   lineHeight: "1.5",
   fontFamily: "Arial, sans-serif",
   resize: "none",
+};
+
+const copyButtonStyle = {
+  position: "absolute",
+  top: "10px",
+  right: "10px",
+  padding: "5px 10px",
+  fontSize: "16px",
+  borderRadius: "4px",
+  cursor: "pointer",
+  backgroundColor: "#2c3e50",
+  color: "white",
+  border: "none",
 };
 
 export default ViewPost;
