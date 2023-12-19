@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
-import { ref, getDatabase, get, child } from "firebase/database";
+import {
+  ref,
+  getDatabase,
+  get,
+  child,
+  query,
+  orderByChild,
+  equalTo,
+} from "firebase/database";
+import { onValue } from "firebase/database";
 import "firebase/auth";
 import { Link } from "react-router-dom";
 import { getPost } from "../../REST";
@@ -88,18 +97,31 @@ const Me = () => {
         const currentUID = user.uid;
         const dbRef = ref(getDatabase());
         const getPosts = async () => {
-          const snapshot = await get(child(dbRef, `posts`));
-          if (!snapshot.exists()) return Promise.reject();
-          return Promise.resolve(snapshot.val());
+          try {
+            const db = getDatabase();
+            const postsRef = ref(db, "posts");
+            const queryForUID = query(
+              postsRef,
+              orderByChild("uid"),
+              equalTo(currentUID)
+            );
+            const snapshot = await get(queryForUID);
+            const postKeys = [];
+            snapshot.forEach((childSnapshot) => {
+              const postKey = childSnapshot.key;
+              postKeys.push(postKey);
+            });
+
+            console.log(postKeys);
+            return postKeys;
+          } catch (error) {
+            console.error("Error fetching posts:", error);
+            return [];
+          }
         };
 
         getPosts().then((postsData) => {
-          const posts = postsData;
-          const postList = [];
-          for (const item in posts) {
-            if (posts[item].uid == currentUID) postList.push(item);
-          }
-          setUserPosts(postList);
+          setUserPosts(postsData);
           setLoading(false);
         });
       } else {
