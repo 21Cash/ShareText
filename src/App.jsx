@@ -4,13 +4,14 @@ import Navbar from "./Components/Navbar/Navbar";
 import Homepage from "./Components/Homepage/Homepage";
 import Login from "./Components/Login/Login";
 import Signup from "./Components/Signup/Signup";
-import database from "./constants";
 import Debug from "./Components/Debug/Debug";
 import TextEditor from "./Components/TextEditor/TextEditor";
 import ViewPost from "./Components/ViewPost/ViewPost";
 import Logout from "./Components/Logout/Logout";
 import PostCreated from "./Components/PostCreated/PostCreated";
 import Footer from "./Components/Footer/Footer";
+import { Me } from "./Components/ProfileView/Me";
+import { firebaseapp } from "./constants";
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
             <Route path="/Signup" element={<Signup />} />
             <Route path="/TextEditor" element={<TextEditor />} />
             <Route path="/viewpost/:postName" element={<ViewPost />} />
+            <Route path="/editpost/:postName" element={<TextEditor />} />
             <Route path="/PostCreated" element={<PostCreated />} />
+            <Route path="/Me" element={<Me />} />
           </Routes>
         </div>
 

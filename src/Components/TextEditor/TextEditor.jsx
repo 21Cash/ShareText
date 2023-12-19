@@ -1,14 +1,25 @@
 import React, { useState, useRef } from "react";
 import { useEffect } from "react";
-import { UploadPost } from "../../REST";
+import { UploadPost, getPost } from "../../REST";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
-const TextEditor = ({ postName }) => {
+const TextEditor = ({}) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [pressed, setPressed] = useState(false);
   const textareaRef = useRef(null);
   const navigate = useNavigate();
+  const { postName } = useParams();
+  useEffect(() => {
+    if (postName) {
+      setTitle(postName);
+      getPost(postName).then((initialText) => {
+        console.log(initialText);
+        setContent(initialText);
+      });
+    }
+  }, []);
+
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };

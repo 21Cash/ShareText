@@ -73,5 +73,14 @@ const getPost = async (postName) => {
     return Promise.reject(error);
   }
 };
+const deletePost = async (postName) => {
+  try {
+    const db = getDatabase();
+    await set(ref(db, `posts/${postName}`), null);
+    console.log("Post deleted.");
+  } catch (error) {
+    console.error("Error deleting post:", error);
+  }
+};
 
-export { UploadPost, getPost, postPresent };
+export { UploadPost, getPost, postPresent, deletePost };

@@ -14,5 +14,5 @@ const firebaseConfig = {
     "https://textshare-37fab-default-rtdb.asia-southeast1.firebasedatabase.app/",
 };
 
-const database = initializeApp(firebaseConfig);
-export default database;
+const firebaseapp = await initializeApp(firebaseConfig);
+export { firebaseapp };
