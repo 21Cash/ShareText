@@ -7,11 +7,14 @@ const TextEditor = ({}) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [pressed, setPressed] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const textareaRef = useRef(null);
   const navigate = useNavigate();
   const { postName } = useParams();
   useEffect(() => {
     if (postName) {
+      setEditMode(true);
+      console.log(`Edit Mode : ${true}`);
       setTitle(postName);
       getPost(postName).then((initialText) => {
         console.log(initialText);
@@ -97,6 +100,7 @@ const TextEditor = ({}) => {
           placeholder="Enter post title..."
           value={title}
           onChange={handleTitleChange}
+          readOnly={editMode}
         />
         <textarea
           ref={textareaRef}
@@ -114,7 +118,7 @@ const TextEditor = ({}) => {
           onMouseDown={() => setPressed(true)}
           onMouseUp={() => setPressed(false)}
         >
-          Create Post
+          {editMode ? <>UpdatePost</> : <>Create Post</>}
         </button>
       </div>
     </div>
