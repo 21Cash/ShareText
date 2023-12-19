@@ -21,7 +21,7 @@ const styles = {
     padding: "3px 20px 20px 20px",
     borderRadius: "8px",
     boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
-    backgroundColor: darkBlue,
+    backgroundColor: "#2c3e50",
     color: "#ffffff",
   },
   heading: {
@@ -118,7 +118,7 @@ const ViewProfile = () => {
           {username && !loading ? (
             <div>
               <h2 style={styles.heading}>{username}</h2>
-              <h3>My Posts:</h3>
+              <h3> Posts :</h3>
               {userPosts.map((post, index) => (
                 <div style={styles.listItem} key={index}>
                   <span style={styles.postTitle}>{post}</span>

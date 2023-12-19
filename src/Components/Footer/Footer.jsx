@@ -10,7 +10,7 @@ const footerStyles = {
     textAlign: "center",
     position: "fixed",
     bottom: "0",
-    left: "0", // Start from the left
+    left: "0",
     width: "100%",
   },
   copyright: {

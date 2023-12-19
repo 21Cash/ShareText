@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { postPresent } from "../../REST";
 
 const Homepage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <PostSearcher />
+      <ProfileViewer />
       <CreatePostButton />
     </div>
   );
@@ -128,6 +129,69 @@ const CreatePostButton = () => {
       >
         Create Post
       </button>
+    </div>
+  );
+};
+
+const ProfileViewer = () => {
+  const [profileName, setProfileName] = useState("");
+  const navigate = useNavigate();
+
+  const handleViewProfile = () => {
+    navigate(`/profile/${profileName}`);
+  };
+
+  const styles = {
+    container: {
+      maxWidth: "400px",
+      margin: "20px auto",
+      padding: "20px",
+      border: "1px solid #ccc",
+      borderRadius: "8px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      textAlign: "center",
+    },
+    profileNameInput: {
+      width: "70%",
+      padding: "10px",
+      fontSize: "16px",
+      marginBottom: "10px",
+      boxSizing: "border-box",
+    },
+    viewProfileButton: {
+      width: "25%",
+      padding: "7px",
+      fontSize: "18px",
+      backgroundColor: "#3498db",
+      color: "#fff",
+      border: "none",
+      cursor: "pointer",
+      borderRadius: "2px",
+      transition: "background-color 0.3s",
+      marginLeft: "5px",
+    },
+  };
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      navigate(`/profile/${profileName}`);
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      <input
+        type="text"
+        style={styles.profileNameInput}
+        placeholder="Enter Profile Name"
+        value={profileName}
+        onChange={(e) => setProfileName(e.target.value)}
+        onKeyPress={handleKeyPress} // Add this line to handle Enter key press
+      />
+      <Link to={`/profile/${profileName}`}>
+        <button style={styles.viewProfileButton} onClick={handleViewProfile}>
+          &#10140; {/* Unicode for right arrow */}
+        </button>
+      </Link>
     </div>
   );
 };
