@@ -1,28 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { getAuth } from "firebase/auth";
 import {
-  ref,
   getDatabase,
-  get,
-  child,
+  ref,
   query,
   orderByChild,
   equalTo,
+  get,
 } from "firebase/database";
+import { Link, useParams } from "react-router-dom";
 import { onValue } from "firebase/database";
-import "firebase/auth";
-import { Link } from "react-router-dom";
-import { getPost } from "../../REST";
-import { deletePost } from "../../REST";
 
 const darkBlue = "#1e2a3a";
-const lightBlue = "#3f5176";
-const darkGrey = "#333333";
 const lightGrey = "#f5f5f5";
-const red = "#f44336";
-const green = "#4caf50";
 const blue = "#2196f3";
-const white = "#ffffff";
 
 const styles = {
   container: {
@@ -38,7 +28,7 @@ const styles = {
     marginBottom: "20px",
     fontSize: "32px",
     fontWeight: "bold",
-    color: green,
+    color: blue,
   },
   listItem: {
     marginBottom: "15px",
@@ -52,7 +42,7 @@ const styles = {
   },
   postTitle: {
     fontSize: "18px",
-    color: darkGrey,
+    color: "#333333",
     marginRight: "20px",
     overflow: "auto",
   },
@@ -70,86 +60,52 @@ const styles = {
     fontWeight: "bold",
     fontSize: "14px",
   },
-  editButton: {
-    backgroundColor: green,
-  },
   viewButton: {
     backgroundColor: blue,
-  },
-  deleteButton: {
-    backgroundColor: red,
   },
 };
 
 const ViewProfile = () => {
-  const [userName, setUserName] = useState("");
   const [userPosts, setUserPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { username } = useParams();
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        const email = user.email;
-        const username = email.substring(0, email.indexOf("@"));
-        setUserName(username);
-
-        const currentUID = user.uid;
-        const dbRef = ref(getDatabase());
-        const getPosts = async () => {
-          try {
-            const db = getDatabase();
-            const postsRef = ref(db, "posts");
-            const queryForUID = query(
-              postsRef,
-              orderByChild("uid"),
-              equalTo(currentUID)
-            );
-            const snapshot = await get(queryForUID);
-            const postKeys = [];
-            snapshot.forEach((childSnapshot) => {
-              const postKey = childSnapshot.key;
-              postKeys.push(postKey);
-            });
-
-            console.log(postKeys);
-            return postKeys;
-          } catch (error) {
-            console.error("Error fetching posts:", error);
-            return [];
-          }
-        };
-
-        getPosts().then((postsData) => {
-          setUserPosts(postsData);
-          setLoading(false);
-        });
+    const db = getDatabase();
+    const usernamesRef = ref(db, `usernames/${username}`);
+    const updatePosts = async (UID) => {
+      const curPosts = await fetchUserPosts(UID);
+      console.log(curPosts);
+      console.log(username);
+      setUserPosts(curPosts);
+      setLoading(false);
+    };
+    onValue(usernamesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const UID = data;
+        updatePosts(UID);
       } else {
-        setUserName("");
-        setUserPosts([]);
         setLoading(false);
       }
     });
-
-    return () => {
-      unsubscribe();
-    };
   }, []);
 
-  const handleDelete = (postName) => {
-    const doDelete = async () => {
-      console.log(`From ME ${postName}]`);
-      deletePost(postName).then(() => {
-        setUserPosts(userPosts.filter((item) => item !== postName));
-        console.log("Post Deleted Successfully");
-      });
-    };
-
+  const fetchUserPosts = async (UID) => {
     try {
-      doDelete();
-    } catch (err) {
-      console.err(err);
-      alert(err);
+      const db = getDatabase();
+      const postsRef = ref(db, "posts");
+      const queryForUID = query(postsRef, orderByChild("uid"), equalTo(UID));
+      const snapshot = await get(queryForUID);
+      const postKeys = [];
+      snapshot.forEach((childSnapshot) => {
+        const postKey = childSnapshot.key;
+        postKeys.push(postKey);
+      });
+      return postKeys;
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      return [];
     }
   };
 
@@ -159,9 +115,9 @@ const ViewProfile = () => {
         <p>Loading...</p>
       ) : (
         <>
-          {userName ? (
+          {username && !loading ? (
             <div>
-              <h2 style={styles.heading}>{userName}</h2>
+              <h2 style={styles.heading}>{username}</h2>
               <h3>My Posts:</h3>
               {userPosts.map((post, index) => (
                 <div style={styles.listItem} key={index}>
@@ -186,4 +142,4 @@ const ViewProfile = () => {
   );
 };
 
-export { ViewProfile as Me };
+export default ViewProfile;

@@ -10,6 +10,7 @@ import ViewPost from "./Components/ViewPost/ViewPost";
 import Logout from "./Components/Logout/Logout";
 import PostCreated from "./Components/PostCreated/PostCreated";
 import Footer from "./Components/Footer/Footer";
+import ViewProfile from "./Components/ViewProfile/ViewProfile";
 import { Me } from "./Components/Me/Me";
 import { firebaseapp } from "./constants";
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/TextEditor" element={<TextEditor />} />
             <Route path="/viewpost/:postName" element={<ViewPost />} />
             <Route path="/editpost/:postName" element={<TextEditor />} />
+            <Route path="/profile/:username" element={<ViewProfile />} />
             <Route path="/PostCreated" element={<PostCreated />} />
             <Route path="/Me" element={<Me />} />
           </Routes>
