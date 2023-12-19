@@ -10,7 +10,7 @@ import ViewPost from "./Components/ViewPost/ViewPost";
 import Logout from "./Components/Logout/Logout";
 import PostCreated from "./Components/PostCreated/PostCreated";
 import Footer from "./Components/Footer/Footer";
-import { Me } from "./Components/ProfileView/Me";
+import { Me } from "./Components/Me/Me";
 import { firebaseapp } from "./constants";
 
 function App() {
