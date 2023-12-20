@@ -34,7 +34,7 @@ const Footer = () => {
     <footer style={footerStyles.container}>
       <div>
         <p style={footerStyles.copyright}>
-          &copy; {currentYear} Sushil L. All Rights Reserved.
+          &copy; {currentYear} Made With ❤ by 21Cash.
         </p>
         <a
           href="https://github.com/21ThousandProof/ShareText"

@@ -144,7 +144,7 @@ const ProfileViewer = () => {
   const styles = {
     container: {
       maxWidth: "400px",
-      margin: "20px auto",
+      margin: "10px auto",
       padding: "20px",
       border: "1px solid #ccc",
       borderRadius: "8px",

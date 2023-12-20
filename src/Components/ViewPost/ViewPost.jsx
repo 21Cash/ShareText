@@ -66,7 +66,7 @@ const textAreaStyle = {
   fontSize: "16px",
   lineHeight: "1.5",
   fontFamily: "Arial, sans-serif",
-  resize: "none",
+  resize: "vertical",
 };
 
 const copyButtonStyle = {
