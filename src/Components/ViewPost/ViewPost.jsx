@@ -4,7 +4,7 @@ import { getPost } from "../../REST";
 
 const ViewPost = () => {
   const { postName } = useParams();
-  const [postText, setPostText] = useState("Your Post Text");
+  const [postText, setPostText] = useState("Loading...");
   const [copyButtonText, setCopyButtonText] = useState("Copy");
 
   useEffect(() => {
@@ -55,6 +55,7 @@ const textAreaContainerStyle = {
   maxWidth: "1200px",
   marginRight: "50px",
   position: "relative",
+  paddingBottom: "200px",
 };
 
 const textAreaStyle = {

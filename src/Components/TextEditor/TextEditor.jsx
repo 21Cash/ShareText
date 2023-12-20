@@ -47,6 +47,7 @@ const TextEditor = ({}) => {
       position: "relative",
       padding: "16px",
       backgroundColor: "#f0f0f0",
+      paddingBottom: "200px",
     },
     titleInput: {
       width: "99%",

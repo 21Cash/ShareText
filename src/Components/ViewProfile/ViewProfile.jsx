@@ -68,9 +68,11 @@ const styles = {
 const ViewProfile = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { username } = useParams();
+  const [userFound, setUserFound] = useState(false);
+  let { username } = useParams();
 
   useEffect(() => {
+    username = username.toLocaleLowerCase();
     const db = getDatabase();
     const usernamesRef = ref(db, `usernames/${username}`);
     const updatePosts = async (UID) => {
@@ -84,8 +86,10 @@ const ViewProfile = () => {
       const data = snapshot.val();
       if (data) {
         const UID = data;
+        setUserFound(true);
         updatePosts(UID);
       } else {
+        setUserFound(false);
         setLoading(false);
       }
     });
@@ -115,7 +119,7 @@ const ViewProfile = () => {
         <p>Loading...</p>
       ) : (
         <>
-          {username && !loading ? (
+          {username && !loading && userFound ? (
             <div>
               <h2 style={styles.heading}>{username}</h2>
               <h3> Posts :</h3>
@@ -134,7 +138,13 @@ const ViewProfile = () => {
               ))}
             </div>
           ) : (
-            <p>User not found.</p>
+            <>
+              <h3>
+                <span style={{ color: "red" }}>
+                  Invalid Username : {username}
+                </span>
+              </h3>
+            </>
           )}
         </>
       )}
