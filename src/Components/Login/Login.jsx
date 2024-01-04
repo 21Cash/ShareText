@@ -10,7 +10,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    signInUser(email, password).then(() => {
+    const userEmail = email + "@gmail.com";
+    signInUser(userEmail, password).then(() => {
       navigate("/Homepage");
     });
   };
@@ -21,7 +22,7 @@ const Login = () => {
         <h2 style={styles.heading}>Login</h2>
         <form style={styles.form}>
           <label style={styles.label} htmlFor="email">
-            Email:
+            Username:
           </label>
           <input
             type="text"

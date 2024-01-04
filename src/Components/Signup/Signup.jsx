@@ -8,7 +8,8 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSignup = () => {
-    signUpUser(email, password).then(() => {
+    const userEmail = email + "@gmail.com"; // Converting Username To Email Address
+    signUpUser(userEmail, password).then(() => {
       navigate("/Homepage");
     });
   };
@@ -19,7 +20,7 @@ const Signup = () => {
         <h2 style={styles.heading}>Signup</h2>
         <form style={styles.form}>
           <label style={styles.label} htmlFor="email">
-            Email:
+            Username:
           </label>
           <input
             type="text"

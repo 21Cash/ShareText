@@ -52,7 +52,7 @@ const titleStyle = {
 const textAreaContainerStyle = {
   marginTop: "20px",
   marginLeft: "20px",
-  maxWidth: "1200px",
+  maxWidth: "1300px",
   marginRight: "50px",
   position: "relative",
   paddingBottom: "200px",
@@ -60,7 +60,7 @@ const textAreaContainerStyle = {
 
 const textAreaStyle = {
   width: "100%",
-  height: "300px",
+  height: "400px",
   padding: "15px",
   borderRadius: "8px",
   border: "1px solid #ccc",
@@ -68,6 +68,8 @@ const textAreaStyle = {
   lineHeight: "1.5",
   fontFamily: "Arial, sans-serif",
   resize: "vertical",
+  overflowX: "auto", // Enable horizontal scrolling
+  whiteSpace: "pre",
 };
 
 const copyButtonStyle = {
