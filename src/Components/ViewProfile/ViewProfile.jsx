@@ -21,7 +21,7 @@ const styles = {
     padding: "3px 20px 20px 20px",
     borderRadius: "8px",
     boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
-    backgroundColor: "#2c3e50",
+    backgroundColor: darkBlue,
     color: "#ffffff",
   },
   heading: {
