@@ -27,6 +27,8 @@ function App() {
         <div style={{ paddingTop: "70px", paddingBottom: "20px" }}>
           <Routes>
             <Route path="" element={<Homepage />} />
+            <Route path="/" element={<Navigate to="" />} />
+            <Route path="/Homepage" element={<Navigate to="" />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Logout" element={<Logout />} />
             <Route path="/Debug" element={<Debug />} />

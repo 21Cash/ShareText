@@ -6,11 +6,11 @@ const Logout = () => {
   useEffect(() => {
     logOutUser()
       .then(() => {
-        navigate("/Homepage");
+        navigate("/");
       })
       .catch((error) => {
         console.log("Failed To Logout");
-        navigate("/Homepage");
+        navigate("/");
       });
   }, []);
 };

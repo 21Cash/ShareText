@@ -1,5 +1,3 @@
-// Login.jsx
-
 import React, { useState } from "react";
 import { signInUser } from "../../UserAuth";
 import { useNavigate } from "react-router-dom";
@@ -9,10 +7,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
     const userEmail = email + "@gmail.com";
     signInUser(userEmail, password).then(() => {
-      navigate("/Homepage");
+      navigate("/");
     });
   };
 
@@ -20,7 +19,7 @@ const Login = () => {
     <div style={styles.background}>
       <div style={styles.container}>
         <h2 style={styles.heading}>Login</h2>
-        <form style={styles.form}>
+        <form style={styles.form} onSubmit={handleLogin}>
           <label style={styles.label} htmlFor="email">
             Username:
           </label>
@@ -43,7 +42,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="button" style={styles.button} onClick={handleLogin}>
+          <button type="submit" style={styles.button}>
             Login
           </button>
         </form>
@@ -63,12 +62,12 @@ const styles = {
   },
   container: {
     background: "#ffffff",
-    padding: "30px", // Adjust the vertical padding as needed
+    padding: "30px",
     borderRadius: "5px",
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
     maxWidth: "400px",
     width: "100%",
-    margin: "auto", // Center horizontally
+    margin: "auto",
   },
   heading: {
     textAlign: "center",

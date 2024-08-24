@@ -10,7 +10,7 @@ const Signup = () => {
   const handleSignup = () => {
     const userEmail = email + "@gmail.com"; // Converting Username To Email Address
     signUpUser(userEmail, password).then(() => {
-      navigate("/Homepage");
+      navigate("/");
     });
   };
 
