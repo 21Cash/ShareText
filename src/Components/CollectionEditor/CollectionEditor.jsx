@@ -95,7 +95,7 @@ const styles = {
   removeButton: {
     cursor: "pointer",
     padding: "8px 12px",
-    fontWeight: "bold",
+    fontWeight: "thin",
     borderRadius: "4px",
     border: "none",
     color: "white",
@@ -343,7 +343,7 @@ const CollectionEditor = ({ isNewPost = false }) => {
                           style={styles.button}
                           onClick={() => addPost(post)}
                         >
-                          ✔
+                          add
                         </button>
                       </div>
                     )}
@@ -382,7 +382,7 @@ const CollectionEditor = ({ isNewPost = false }) => {
                           style={styles.removeButton}
                           onClick={() => removePost(post)}
                         >
-                          X
+                          remove
                         </button>
                       </div>
                     )}
