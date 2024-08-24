@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const darkBlue = "#1e2a3a";
 const lightBlue = "#3f5176";
@@ -9,36 +9,36 @@ const green = "#4caf50";
 const blue = "#2196f3";
 const white = "#ffffff";
 
-const styles = {
-  actionButton: {
-    padding: "8px 12px",
-    marginRight: "10px",
-    borderRadius: "4px",
-    cursor: "pointer",
-    textDecoration: "none",
-    color: "#ffffff",
-    fontWeight: "bold",
-    fontSize: "14px",
-  },
-  editButton: {
-    backgroundColor: green,
-  },
-  viewButton: {
-    backgroundColor: blue,
-  },
-  deleteButton: {
-    backgroundColor: red,
-  },
-  cardListContainer: {
+const CardList = ({
+  searchValue,
+  handleSearchChange,
+  viewingCard,
+  setViewingCard,
+  searchInputRef,
+}) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const cardListContainerStyle = {
     display: "flex",
     alignItems: "center",
     marginBottom: "20px",
     paddingLeft: "15px",
     paddingBottom: "5px",
-  },
-  cardListButton: {
+    flexDirection: isMobile ? "column" : "row", // Column on mobile, row on desktop
+  };
+
+  const buttonStyle = {
     padding: "10px 20px",
-    marginRight: "10px",
+    marginRight: isMobile ? "0" : "10px",
     borderRadius: "4px",
     cursor: "pointer",
     backgroundColor: lightBlue,
@@ -46,41 +46,30 @@ const styles = {
     fontWeight: "bold",
     fontSize: "16px",
     border: "none",
-  },
-  cardListButtonActive: {
-    backgroundColor: green,
-  },
-  searchBox: {
-    marginLeft: "4px",
+    width: isMobile ? "100%" : "auto", // Full width on mobile, auto on desktop
+    textAlign: "center",
+    boxSizing: "border-box", // Ensures padding is included in width
+    marginBottom: isMobile ? "10px" : "0", // Space between buttons on mobile
+  };
+
+  const searchBoxStyle = {
+    marginLeft: isMobile ? "0" : "4px",
     padding: "10px",
     borderRadius: "4px",
     border: "1px solid #ccc",
-    width: "300px",
-  },
-  horizontalLine: {
-    width: "calc(100% - 40px)", // Adjust to make it shorter from left and right
-    border: "none",
-    borderTop: `1px solid black`,
-    // borderTop: `1px solid ${darkGrey}`,
-    marginBottom: "30px",
-  },
-};
+    width: isMobile ? "100%" : "300px", // Full width on mobile
+    marginTop: isMobile ? "10px" : "0", // Margin top for mobile
+    boxSizing: "border-box", // Ensures padding is included in width
+  };
 
-const CardList = ({
-  searchValue,
-  handleSearchChange,
-  viewingCard,
-  searchInputRef,
-  setViewingCard,
-}) => {
   return (
     <div>
-      <div style={styles.cardListContainer}>
+      <div style={cardListContainerStyle}>
         <button
           onClick={() => setViewingCard("Posts")}
           style={{
-            ...styles.cardListButton,
-            ...(viewingCard === "Posts" ? styles.cardListButtonActive : {}),
+            ...buttonStyle,
+            backgroundColor: viewingCard === "Posts" ? green : lightBlue,
           }}
         >
           Posts
@@ -88,10 +77,8 @@ const CardList = ({
         <button
           onClick={() => setViewingCard("Collections")}
           style={{
-            ...styles.cardListButton,
-            ...(viewingCard === "Collections"
-              ? styles.cardListButtonActive
-              : {}),
+            ...buttonStyle,
+            backgroundColor: viewingCard === "Collections" ? green : lightBlue,
           }}
         >
           Collections
@@ -103,14 +90,20 @@ const CardList = ({
               ? "Search posts..."
               : "Search collections..."
           }
-          style={styles.searchBox}
+          style={searchBoxStyle}
           value={searchValue}
           onChange={handleSearchChange}
           ref={searchInputRef}
-          autoFocus
         />
       </div>
-      <hr style={styles.horizontalLine} />
+      <hr
+        style={{
+          width: "calc(100% - 40px)",
+          border: "none",
+          borderTop: `1px solid black`,
+          marginBottom: "30px",
+        }}
+      />
     </div>
   );
 };
