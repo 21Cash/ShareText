@@ -39,7 +39,6 @@ const styles = {
     fontSize: "32px",
     fontWeight: "bold",
     color: green,
-    // color: "#3498db",
   },
   listItem: {
     marginBottom: "15px",
@@ -108,9 +107,6 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonIcon: {
-    fontSize: "18px",
-  },
   input: {
     width: "98%",
     padding: "10px",
@@ -127,12 +123,10 @@ const styles = {
     borderRadius: "4px",
     border: "none",
     color: white,
-    // backgroundColor: green,
     backgroundColor: "#3498db",
     fontSize: "16px",
   },
 };
-
 const CollectionEditor = ({ isNewPost = false }) => {
   const { collectionName: initialCollectionName } = useParams();
   const [username, setUsername] = useState("");
@@ -252,32 +246,48 @@ const CollectionEditor = ({ isNewPost = false }) => {
 
     if (!destination) return;
 
-    if (type === "post") {
-      if (
-        destination.droppableId === source.droppableId &&
-        destination.index === source.index
-      ) {
-        return;
-      }
+    if (source.droppableId === destination.droppableId) {
+      if (type === "post") {
+        const sourceList =
+          source.droppableId === "allPosts" ? filteredPosts : posts;
+        const updatedList = Array.from(sourceList);
 
-      const updatedList = Array.from(
-        source.droppableId === "allPosts" ? filteredPosts : posts
-      );
-      updatedList.splice(source.index, 1);
-      updatedList.splice(destination.index, 0, draggableId);
+        const [removed] = updatedList.splice(source.index, 1);
+        updatedList.splice(destination.index, 0, removed);
+
+        if (source.droppableId === "allPosts") {
+          setAllPosts(updatedList);
+        } else {
+          setPosts(updatedList);
+        }
+      }
+    } else {
+      const sourceList =
+        source.droppableId === "allPosts" ? filteredPosts : posts;
+      const destinationList =
+        destination.droppableId === "allPosts" ? filteredPosts : posts;
+      const updatedSourceList = Array.from(sourceList);
+      const updatedDestinationList = Array.from(destinationList);
+
+      const [removed] = updatedSourceList.splice(source.index, 1);
+
+      updatedDestinationList.splice(destination.index, 0, removed);
 
       if (source.droppableId === "allPosts") {
-        setAllPosts(updatedList);
+        setAllPosts(updatedSourceList);
       } else {
-        setPosts(updatedList);
+        setPosts(updatedSourceList);
       }
-    } else if (type === "collection") {
-      const updatedPosts = Array.from(posts);
-      updatedPosts.splice(source.index, 1);
-      updatedPosts.splice(destination.index, 0, draggableId);
-      setPosts(updatedPosts);
+
+      if (destination.droppableId === "allPosts") {
+        setAllPosts(updatedDestinationList);
+      } else {
+        setPosts(updatedDestinationList);
+      }
     }
   };
+
+  const getUniqueId = (post, index) => `post-${post}-${index}`;
 
   return (
     <div style={styles.container}>
@@ -307,14 +317,17 @@ const CollectionEditor = ({ isNewPost = false }) => {
           <Droppable droppableId="allPosts" type="post">
             {(provided) => (
               <div
-                style={styles.list}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
+                style={styles.list}
               >
                 <h2>All Posts</h2>
-                {filteredPosts.length === 0 && <p>No posts available.</p>}
                 {filteredPosts.map((post, index) => (
-                  <Draggable key={post} draggableId={post} index={index}>
+                  <Draggable
+                    key={getUniqueId(post, index)}
+                    draggableId={getUniqueId(post, index)}
+                    index={index}
+                  >
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
@@ -340,17 +353,20 @@ const CollectionEditor = ({ isNewPost = false }) => {
               </div>
             )}
           </Droppable>
-          <Droppable droppableId="selectedPosts" type="collection">
+          <Droppable droppableId="posts" type="post">
             {(provided) => (
               <div
-                style={styles.list}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
+                style={styles.list}
               >
-                <h2>Selected Posts</h2>
-                {posts.length === 0 && <p>No posts in collection.</p>}
+                <h2>Current Collection</h2>
                 {posts.map((post, index) => (
-                  <Draggable key={post} draggableId={post} index={index}>
+                  <Draggable
+                    key={getUniqueId(post, index)}
+                    draggableId={getUniqueId(post, index)}
+                    index={index}
+                  >
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
@@ -378,8 +394,8 @@ const CollectionEditor = ({ isNewPost = false }) => {
           </Droppable>
         </div>
       </DragDropContext>
-      <button style={styles.submitButton} onClick={handleSubmit}>
-        {isNewPost ? "Submit Collection" : "Upload Collection"}
+      <button onClick={handleSubmit} style={styles.submitButton}>
+        {isNewPost ? "Submit" : "Update Collection"}
       </button>
     </div>
   );

@@ -39,7 +39,7 @@ const styles = {
   heading: {
     marginBottom: "20px",
     fontSize: "32px",
-    paddingLeft: "10px",
+    paddingLeft: "15px",
     fontWeight: "bold",
     color: green,
   },

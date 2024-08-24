@@ -40,6 +40,7 @@ const styles = {
     marginBottom: "20px",
     fontSize: "32px",
     fontWeight: "bold",
+    paddingLeft: "15px",
     color: green,
   },
   listItem: {
