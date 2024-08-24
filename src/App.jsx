@@ -46,6 +46,10 @@ function App() {
               path="/CollectionEditor/:collectionName"
               element={<CollectionEditor />}
             />
+            <Route
+              path="/CreateCollection"
+              element={<CollectionEditor isNewPost={true} />}
+            />
           </Routes>
         </div>
 

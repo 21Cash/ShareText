@@ -75,6 +75,25 @@ const ViewProfile = () => {
     username = username.toLocaleLowerCase();
     const db = getDatabase();
     const usernamesRef = ref(db, `usernames/${username}`);
+
+    const fetchUserPosts = async (UID) => {
+      try {
+        const db = getDatabase();
+        const postsRef = ref(db, "posts");
+        const queryForUID = query(postsRef, orderByChild("uid"), equalTo(UID));
+        const snapshot = await get(queryForUID);
+        const postKeys = [];
+        snapshot.forEach((childSnapshot) => {
+          const postKey = childSnapshot.key;
+          postKeys.push(postKey);
+        });
+        return postKeys;
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        return [];
+      }
+    };
+
     const updatePosts = async (UID) => {
       const curPosts = await fetchUserPosts(UID);
       console.log(curPosts);

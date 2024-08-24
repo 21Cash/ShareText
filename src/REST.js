@@ -191,6 +191,7 @@ const uploadCollection = async (collectionName, posts) => {
   } catch (err) {
     console.error(err);
     console.error("Couldn't Update Collection.");
+    alert("Collection Upload Failed, try renaming the collection.");
   }
 };
 
