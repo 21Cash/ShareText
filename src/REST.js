@@ -200,7 +200,7 @@ const deleteCollection = async (collectionName) => {
     const id = auth.currentUser.uid;
 
     const del_path = `users/${id}/Collections/${collectionName}`;
-    await set(ref(db, write_path), null);
+    await set(ref(db, del_path), null);
 
     console.log("Collection Deleted", collectionName);
   } catch (err) {
