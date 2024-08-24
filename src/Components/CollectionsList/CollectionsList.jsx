@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getCollections } from "../../REST";
+import { refFromURL } from "firebase/database";
 
 const darkBlue = "#1e2a3a";
 const lightBlue = "#3f5176";
@@ -69,13 +70,19 @@ const styles = {
 
 const CollectionsList = ({ isCurrentUser, username }) => {
   const [collections, setCollections] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCollections(username).then((collectionsData) => {
       setCollections(collectionsData);
       console.log("COLLECTIONS LIST UPDATED");
     });
-  }, [username]);
+  }, []);
+
+  const onClickEdit = (collectionName) => {
+    if (collectionName == "") return;
+    navigate(`/CollectionEditor/${collectionName}`);
+  };
 
   return (
     <div style={styles.container}>
@@ -86,6 +93,7 @@ const CollectionsList = ({ isCurrentUser, username }) => {
             {isCurrentUser && (
               <>
                 <button
+                  onClick={() => onClickEdit(collection)}
                   style={{ ...styles.actionButton, ...styles.editButton }}
                 >
                   Edit

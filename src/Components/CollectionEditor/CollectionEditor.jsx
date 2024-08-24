@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCollectionPosts, uploadCollection } from "../../REST";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import {
   ref,
@@ -30,8 +30,8 @@ const styles = {
     backgroundColor: darkBlue,
     color: "#ffffff",
     display: "flex",
-    flexDirection: "column", // Stack items vertically
-    position: "relative", // Added for positioning the button
+    flexDirection: "column",
+    position: "relative",
   },
   heading: {
     marginBottom: "20px",
@@ -125,7 +125,7 @@ const CollectionEditor = ({ isNewPost = false }) => {
   const [posts, setPosts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [collectionName, setCollectionName] = useState(initialCollectionName);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -214,8 +214,22 @@ const CollectionEditor = ({ isNewPost = false }) => {
     setCollectionName(e.target.value);
   };
 
+  const redirectToMessageScreen = () => {
+    navigate(
+      `/MessageScreen?textColor=green&msgText=${
+        isNewPost ? "Collection Created !" : "Collection Updated !"
+      }`
+    );
+  };
+
   const handleSubmit = () => {
-    uploadCollection(collectionName, posts);
+    uploadCollection(collectionName, posts)
+      .then(() => {
+        redirectToMessageScreen();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (

@@ -4,7 +4,14 @@ import { useEffect } from "react";
 const PostCreated = () => {
   return (
     <>
-      <p style={{ fontSize: "24px", color: "green", fontWeight: "bold" }}>
+      <p
+        style={{
+          fontSize: "25px",
+          color: "green",
+          fontWeight: "bold",
+          paddingLeft: "20px",
+        }}
+      >
         Post Created
       </p>
     </>

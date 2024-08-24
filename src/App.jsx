@@ -15,6 +15,7 @@ import { Me } from "./Components/Me/Me";
 import { firebaseapp } from "./constants";
 import ViewCollection from "./Components/ViewCollection/ViewCollection";
 import CollectionEditor from "./Components/CollectionEditor/CollectionEditor";
+import MessageScreen from "./Components/MessageScreen/MessageScreen";
 
 function App() {
   return (
@@ -41,7 +42,6 @@ function App() {
               path="view-collection/:username/:collectionName"
               element={<ViewCollection />}
             />
-
             <Route
               path="/CollectionEditor/:collectionName"
               element={<CollectionEditor />}
@@ -50,6 +50,7 @@ function App() {
               path="/CreateCollection"
               element={<CollectionEditor isNewPost={true} />}
             />
+            <Route path="/MessageScreen" Component={MessageScreen} />
           </Routes>
         </div>
 

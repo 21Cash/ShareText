@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { getAuth } from "firebase/auth";
 import {
   ref,
   getDatabase,
   get,
-  child,
   query,
   orderByChild,
   equalTo,
-  refFromURL,
 } from "firebase/database";
-import { onValue } from "firebase/database";
-import "firebase/auth";
 import { Link } from "react-router-dom";
-import { getPost } from "../../REST";
 import { deletePost } from "../../REST";
 import CollectionsList from "../CollectionsList/CollectionsList";
 
@@ -81,13 +76,46 @@ const styles = {
   deleteButton: {
     backgroundColor: red,
   },
+  cardListContainer: {
+    display: "flex",
+    marginBottom: "20px",
+    alignItems: "center",
+  },
+  cardListButton: {
+    padding: "10px 20px",
+    marginRight: "10px",
+    borderRadius: "4px",
+    cursor: "pointer",
+    backgroundColor: lightBlue,
+    color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: "16px",
+    border: "none",
+  },
+  cardListButtonActive: {
+    backgroundColor: green,
+  },
+  searchBox: {
+    marginLeft: "4px",
+    padding: "10px",
+    borderRadius: "4px",
+    border: "1px solid #ccc",
+    width: "300px",
+  },
 };
 
 const Me = () => {
   const [userName, setUserName] = useState("");
   const [userPosts, setUserPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewingCard, setViewingCard] = useState("Posts");
+  const [searchValue, setSearchValue] = useState("");
+  const [collections, setCollections] = useState([]);
+  const [filteredCollections, setFilteredCollections] = useState([]);
+  const [allCollections, setAllCollections] = useState([]);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const auth = getAuth();
@@ -99,6 +127,7 @@ const Me = () => {
 
         const currentUID = user.uid;
         const dbRef = ref(getDatabase());
+
         const getPosts = async () => {
           try {
             const db = getDatabase();
@@ -115,7 +144,6 @@ const Me = () => {
               postKeys.push(postKey);
             });
 
-            console.log(postKeys);
             return postKeys;
           } catch (error) {
             console.error("Error fetching posts:", error);
@@ -123,13 +151,28 @@ const Me = () => {
           }
         };
 
+        const getCollections = async () => {
+          // Fetch collections similar to how posts are fetched
+          // For now, let's assume it's similar to posts fetching
+          return [];
+        };
+
         getPosts().then((postsData) => {
+          setAllPosts(postsData);
           setUserPosts(postsData);
+          setFilteredPosts(postsData);
           setLoading(false);
+        });
+
+        getCollections().then((collectionsData) => {
+          setAllCollections(collectionsData);
+          setCollections(collectionsData);
+          setFilteredCollections(collectionsData);
         });
       } else {
         setUserName("");
         setUserPosts([]);
+        setCollections([]);
         setLoading(false);
       }
     });
@@ -139,10 +182,24 @@ const Me = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (viewingCard === "Posts") {
+      const filtered = allPosts.filter((post) =>
+        post.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredPosts(filtered);
+    } else if (viewingCard === "Collections") {
+      const filtered = allCollections.filter((collection) =>
+        collection.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredCollections(filtered);
+    }
+  }, [searchValue, viewingCard, allPosts, allCollections]);
+
   const handleDelete = (postName) => {
     const doDelete = async () => {
-      console.log(`From ME ${postName}]`);
       deletePost(postName).then(() => {
+        setAllPosts(allPosts.filter((item) => item !== postName));
         setUserPosts(userPosts.filter((item) => item !== postName));
         console.log("Post Deleted Successfully");
       });
@@ -151,30 +208,51 @@ const Me = () => {
     try {
       doDelete();
     } catch (err) {
-      console.err(err);
+      console.error(err);
       alert(err);
     }
   };
 
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
   const CardList = () => {
     return (
-      <div>
+      <div style={styles.cardListContainer}>
         <button
-          onClick={() => {
-            setViewingCard("Posts");
+          onClick={() => setViewingCard("Posts")}
+          style={{
+            ...styles.cardListButton,
+            ...(viewingCard === "Posts" ? styles.cardListButtonActive : {}),
           }}
         >
-          {" "}
-          Posts{" "}
+          Posts
         </button>
         <button
-          onClick={() => {
-            setViewingCard("Collections");
+          onClick={() => setViewingCard("Collections")}
+          style={{
+            ...styles.cardListButton,
+            ...(viewingCard === "Collections"
+              ? styles.cardListButtonActive
+              : {}),
           }}
         >
-          {" "}
-          Collections{" "}
+          Collections
         </button>
+        <input
+          type="text"
+          placeholder={
+            viewingCard === "Posts"
+              ? "Search posts..."
+              : "Search collections..."
+          }
+          style={styles.searchBox}
+          value={searchValue}
+          onChange={handleSearchChange}
+          ref={searchInputRef}
+          autoFocus
+        />
       </div>
     );
   };
@@ -182,13 +260,9 @@ const Me = () => {
   const PostsList = () => {
     return (
       <div>
-        <h2 style={styles.heading}>{userName}</h2>
-        {/* <h3>My Posts:</h3> */}
-        <CardList />
-
-        {viewingCard == "Posts" ? (
+        {viewingCard === "Posts" ? (
           <>
-            {userPosts.map((post, index) => (
+            {filteredPosts.map((post, index) => (
               <div style={styles.listItem} key={index}>
                 <span style={styles.postTitle}>{post}</span>
                 <div style={styles.buttonsContainer}>
@@ -215,7 +289,11 @@ const Me = () => {
             ))}
           </>
         ) : (
-          <CollectionsList isCurrentUser={true} username={userName} />
+          <CollectionsList
+            isCurrentUser={true}
+            username={userName}
+            collections={filteredCollections}
+          />
         )}
       </div>
     );
@@ -223,6 +301,8 @@ const Me = () => {
 
   return (
     <div style={styles.container}>
+      <h2 style={styles.heading}>{userName}</h2>
+      <CardList />
       {loading ? (
         <p>Loading...</p>
       ) : (
