@@ -20,14 +20,13 @@ import MessageScreen from "./Components/MessageScreen/MessageScreen";
 function App() {
   return (
     <BrowserRouter>
-      <div style={{ minHeight: "100vh", position: "relative" }}>
+      <div style={{ maxHeight: "100vh", position: "relative" }}>
         <Navbar />
 
         {/* Add padding or margin to create space for the Navbar */}
         <div style={{ paddingTop: "70px", paddingBottom: "20px" }}>
           <Routes>
-            <Route path="/" element={<Navigate to={"/Homepage"} />} />
-            <Route path="/Homepage" element={<Homepage />} />
+            <Route path="" element={<Homepage />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Logout" element={<Logout />} />
             <Route path="/Debug" element={<Debug />} />
@@ -39,7 +38,7 @@ function App() {
             <Route path="/PostCreated" element={<PostCreated />} />
             <Route path="/Me" element={<Me />} />
             <Route
-              path="view-collection/:username/:collectionName"
+              path="/:username/Collections/:collectionName"
               element={<ViewCollection />}
             />
             <Route

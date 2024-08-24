@@ -55,12 +55,11 @@ const textAreaContainerStyle = {
   maxWidth: "1300px",
   marginRight: "50px",
   position: "relative",
-  paddingBottom: "200px",
 };
 
 const textAreaStyle = {
   width: "100%",
-  height: "400px",
+  height: "65vh",
   padding: "15px",
   borderRadius: "8px",
   border: "1px solid #ccc",

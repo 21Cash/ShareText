@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getCollections } from "../../REST";
 import { refFromURL } from "firebase/database";
 
 const darkBlue = "#1e2a3a";
@@ -15,8 +14,8 @@ const white = "#ffffff";
 const styles = {
   container: {
     maxWidth: "900px",
-    margin: "0 auto 50px",
-    padding: "3px 20px 20px 20px",
+    margin: "0 auto 0px",
+    padding: "3px 20px 0px 20px",
     borderRadius: "8px",
     backgroundColor: darkBlue,
     color: "#ffffff",
@@ -68,16 +67,13 @@ const styles = {
   },
 };
 
-const CollectionsList = ({ isCurrentUser, username }) => {
-  const [collections, setCollections] = useState([]);
+const CollectionsList = ({
+  isCurrentUser,
+  username,
+  collections,
+  handleDelete,
+}) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getCollections(username).then((collectionsData) => {
-      setCollections(collectionsData);
-      console.log("COLLECTIONS LIST UPDATED");
-    });
-  }, []);
 
   const onClickEdit = (collectionName) => {
     if (collectionName == "") return;
@@ -86,34 +82,39 @@ const CollectionsList = ({ isCurrentUser, username }) => {
 
   return (
     <div style={styles.container}>
-      {collections.map((collection, index) => (
-        <div key={index} style={styles.listItem}>
-          <span style={styles.postTitle}>{collection}</span>
-          <div style={styles.buttonsContainer}>
-            {isCurrentUser && (
-              <>
-                <button
-                  onClick={() => onClickEdit(collection)}
-                  style={{ ...styles.actionButton, ...styles.editButton }}
-                >
-                  Edit
-                </button>
-                <button
-                  style={{ ...styles.actionButton, ...styles.deleteButton }}
-                >
-                  Delete
-                </button>
-              </>
-            )}
-            <Link
-              to={`/view-collection/${username}/${collection}`}
-              style={{ ...styles.actionButton, ...styles.viewButton }}
-            >
-              View
-            </Link>
+      {collections &&
+        collections.length > 0 &&
+        collections.map((collection, index) => (
+          <div key={index} style={styles.listItem}>
+            <span style={styles.postTitle}>{collection}</span>
+            <div style={styles.buttonsContainer}>
+              <Link
+                to={`/${username}/Collections/${collection}`}
+                style={{ ...styles.actionButton, ...styles.viewButton }}
+              >
+                View
+              </Link>
+              {isCurrentUser && (
+                <>
+                  <button
+                    onClick={() => onClickEdit(collection)}
+                    style={{ ...styles.actionButton, ...styles.editButton }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    style={{ ...styles.actionButton, ...styles.deleteButton }}
+                    onClick={() => handleDelete(collection)}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+
+      {!collections || (collections.length == 0 && <h3>No Collections.</h3>)}
     </div>
   );
 };

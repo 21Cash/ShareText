@@ -1,18 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { getAuth } from "firebase/auth";
 import {
-  getDatabase,
   ref,
+  getDatabase,
+  get,
   query,
   orderByChild,
+  child,
   equalTo,
-  get,
+  refFromURL,
 } from "firebase/database";
 import { Link, useParams } from "react-router-dom";
-import { onValue } from "firebase/database";
+import { deleteCollection, deletePost, getCollections } from "../../REST";
+import CollectionsList from "../CollectionsList/CollectionsList";
+import { getUserId } from "../../REST";
+import PostView from "../PostView/PostView";
+import CardList from "../CardList/CardList";
 
 const darkBlue = "#1e2a3a";
+const lightBlue = "#3f5176";
+const darkGrey = "#333333";
 const lightGrey = "#f5f5f5";
+const red = "#f44336";
+const green = "#4caf50";
 const blue = "#2196f3";
+const white = "#ffffff";
 
 const styles = {
   container: {
@@ -28,11 +40,13 @@ const styles = {
     marginBottom: "20px",
     fontSize: "32px",
     fontWeight: "bold",
-    color: blue,
+    color: green,
   },
   listItem: {
     marginBottom: "15px",
     padding: "10px",
+    marginLeft: "16px",
+    marginRight: "16px",
     borderRadius: "6px",
     boxShadow: "0 0 5px rgba(255, 255, 255, 0.1)",
     backgroundColor: lightGrey,
@@ -42,7 +56,7 @@ const styles = {
   },
   postTitle: {
     fontSize: "18px",
-    color: "#333333",
+    color: darkGrey,
     marginRight: "20px",
     overflow: "auto",
   },
@@ -50,43 +64,39 @@ const styles = {
     display: "flex",
     alignItems: "center",
   },
-  actionButton: {
-    padding: "8px 12px",
-    marginRight: "10px",
-    borderRadius: "4px",
-    cursor: "pointer",
-    textDecoration: "none",
-    color: "#ffffff",
-    fontWeight: "bold",
-    fontSize: "14px",
-  },
-  viewButton: {
-    backgroundColor: blue,
-  },
 };
 
 const ViewProfile = () => {
+  const { username } = useParams();
   const [userPosts, setUserPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userFound, setUserFound] = useState(false);
-  let { username } = useParams();
+  const [viewingCard, setViewingCard] = useState("Posts");
+  const [searchValue, setSearchValue] = useState("");
+  const [collections, setCollections] = useState([]);
+  const [filteredCollections, setFilteredCollections] = useState([]);
+  const [allCollections, setAllCollections] = useState([]);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
-    username = username.toLocaleLowerCase();
-    const db = getDatabase();
-    const usernamesRef = ref(db, `usernames/${username}`);
-
-    const fetchUserPosts = async (UID) => {
+    const getPosts = async () => {
       try {
+        const currentUID = await getUserId(username);
         const db = getDatabase();
         const postsRef = ref(db, "posts");
-        const queryForUID = query(postsRef, orderByChild("uid"), equalTo(UID));
+        const queryForUID = query(
+          postsRef,
+          orderByChild("uid"),
+          equalTo(currentUID)
+        );
         const snapshot = await get(queryForUID);
         const postKeys = [];
         snapshot.forEach((childSnapshot) => {
           const postKey = childSnapshot.key;
           postKeys.push(postKey);
         });
+
         return postKeys;
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -94,60 +104,77 @@ const ViewProfile = () => {
       }
     };
 
-    const updatePosts = async (UID) => {
-      const curPosts = await fetchUserPosts(UID);
-      console.log(curPosts);
-      console.log(username);
-      setUserPosts(curPosts);
-      setLoading(false);
-    };
-    onValue(usernamesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const UID = data;
-        setUserFound(true);
-        updatePosts(UID);
-      } else {
-        setUserFound(false);
-        setLoading(false);
+    const fetchCollections = async () => {
+      try {
+        const uid = await getUserId(username);
+        return getCollections(username);
+      } catch (err) {
+        console.error(err);
+        console.error("Failed to get Collections", username);
+        return null;
       }
+    };
+
+    getPosts().then((postsData) => {
+      setAllPosts(postsData);
+      setUserPosts(postsData);
+      setFilteredPosts(postsData);
+      setLoading(false);
+    });
+
+    fetchCollections().then((collectionsData) => {
+      setAllCollections(collectionsData);
+      setCollections(collectionsData);
+      setFilteredCollections(collectionsData);
     });
   }, []);
 
+  useEffect(() => {
+    if (viewingCard === "Posts") {
+      const filtered = allPosts.filter((post) =>
+        post.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredPosts(filtered);
+    } else if (viewingCard === "Collections") {
+      const filtered = allCollections.filter((collection) =>
+        collection.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredCollections(filtered);
+    }
+  }, [searchValue, viewingCard, allPosts, allCollections]);
+
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const ListView = () => {
+    return (
+      <div>
+        {viewingCard === "Posts" ? (
+          <PostView posts={filteredPosts} />
+        ) : (
+          <CollectionsList
+            username={username}
+            collections={filteredCollections}
+          />
+        )}
+      </div>
+    );
+  };
+
   return (
     <div style={styles.container}>
+      <h2 style={styles.heading}>{username}</h2>
+      <CardList
+        handleSearchChange={handleSearchChange}
+        viewingCard={viewingCard}
+        searchInputRef={searchInputRef}
+        setViewingCard={setViewingCard}
+      />
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <>
-          {username && !loading && userFound ? (
-            <div>
-              <h2 style={styles.heading}>{username}</h2>
-              <h3> Posts :</h3>
-              {userPosts.map((post, index) => (
-                <div style={styles.listItem} key={index}>
-                  <span style={styles.postTitle}>{post}</span>
-                  <div style={styles.buttonsContainer}>
-                    <Link
-                      to={`/viewpost/${post}`}
-                      style={{ ...styles.actionButton, ...styles.viewButton }}
-                    >
-                      View
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              <h3>
-                <span style={{ color: "red" }}>
-                  Invalid Username : {username}
-                </span>
-              </h3>
-            </>
-          )}
-        </>
+        <>{username ? <ListView /> : <p>User not found.</p>}</>
       )}
     </div>
   );

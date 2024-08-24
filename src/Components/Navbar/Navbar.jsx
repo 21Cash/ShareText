@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <div style={styles.navbar}>
       <div style={styles.logo}>
-        <Link to="/Homepage" style={styles.link}>
+        <Link to="" style={styles.link}>
           ShareText
         </Link>
       </div>

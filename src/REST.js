@@ -15,11 +15,9 @@ import { cloneElement, createRef } from "react";
 
 const getUserId = async (username) => {
   try {
-    username = username.toLowerCase(); // fixed typo
+    username = username.toLowerCase();
     const db = ref(getDatabase());
     const readPath = `usernames/${username}`;
-
-    console.log(`Fetching UID of ${username}`);
 
     const snapshot = await get(child(db, readPath));
 
@@ -133,7 +131,7 @@ const getCollections = async (username) => {
 
     if (!snapshot.exists()) {
       console.error("Collections Not Found");
-      return null;
+      return [];
     }
 
     console.log("Collections Fetched");
@@ -148,7 +146,7 @@ const getCollections = async (username) => {
   } catch (err) {
     console.error(err);
     console.error("Failed to get Collections", username);
-    return null;
+    return [];
   }
 };
 
@@ -220,4 +218,5 @@ export {
   getUserId,
   getCollections,
   getCollectionPosts,
+  deleteCollection,
 };

@@ -1,6 +1,5 @@
-import { refFromURL } from "firebase/database";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const darkBlue = "#1e2a3a";
 const lightBlue = "#3f5176";
@@ -22,10 +21,16 @@ const styles = {
     color: "#ffffff",
   },
   heading: {
-    marginBottom: "20px",
+    marginBottom: "5px",
     fontSize: "32px",
     fontWeight: "bold",
     color: green,
+  },
+  authorName: {
+    marginBottom: "20px",
+    fontSize: "20px",
+    color: lightGrey,
+    fontStyle: "italic",
   },
   listItem: {
     marginBottom: "15px",
@@ -67,7 +72,10 @@ const styles = {
     backgroundColor: red,
   },
 };
-const PostsList = ({ header, isCurrentViewer = false, posts = [] }) => {
+
+const PostsList = ({ header, isCurrentUser = false, posts = [] }) => {
+  const [authorName] = useState(useParams().username || "Anonymous");
+
   const handleDelete = (post) => {
     console.log(`Deleting post: ${post}`);
   };
@@ -75,7 +83,7 @@ const PostsList = ({ header, isCurrentViewer = false, posts = [] }) => {
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>{header}</h2>
-
+      {authorName && <p style={styles.authorName}>by {authorName}</p>}
       {posts && posts.length > 0 ? (
         posts.map((post, index) => (
           <div style={styles.listItem} key={index}>
@@ -87,27 +95,32 @@ const PostsList = ({ header, isCurrentViewer = false, posts = [] }) => {
               >
                 View
               </Link>
-              <Link
-                to={`/editpost/${post}`}
-                style={{ ...styles.actionButton, ...styles.editButton }}
-              >
-                Edit
-              </Link>
-              <button
-                onClick={() => handleDelete(post)}
-                style={{ ...styles.actionButton, ...styles.deleteButton }}
-              >
-                Delete
-              </button>
+              {isCurrentUser && (
+                <>
+                  <Link
+                    to={`/editpost/${post}`}
+                    style={{ ...styles.actionButton, ...styles.editButton }}
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(post)}
+                    style={{ ...styles.actionButton, ...styles.deleteButton }}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ))
       ) : (
         <>
-          <h3> Loading Collection...</h3>
+          <h3>Loading Collection...</h3>
         </>
       )}
     </div>
   );
 };
+
 export default PostsList;

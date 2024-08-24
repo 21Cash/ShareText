@@ -6,11 +6,16 @@ import {
   get,
   query,
   orderByChild,
+  child,
   equalTo,
+  refFromURL,
 } from "firebase/database";
 import { Link } from "react-router-dom";
-import { deletePost } from "../../REST";
+import { deleteCollection, deletePost } from "../../REST";
 import CollectionsList from "../CollectionsList/CollectionsList";
+import { getUserId } from "../../REST";
+import PostView from "../PostView/PostView";
+import CardList from "../CardList/CardList";
 
 const darkBlue = "#1e2a3a";
 const lightBlue = "#3f5176";
@@ -24,7 +29,7 @@ const white = "#ffffff";
 const styles = {
   container: {
     maxWidth: "900px",
-    margin: "0 auto 50px",
+    margin: "0 auto 90px",
     padding: "3px 20px 20px 20px",
     borderRadius: "8px",
     boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
@@ -40,6 +45,8 @@ const styles = {
   listItem: {
     marginBottom: "15px",
     padding: "10px",
+    marginLeft: "16px",
+    marginRight: "16px",
     borderRadius: "6px",
     boxShadow: "0 0 5px rgba(255, 255, 255, 0.1)",
     backgroundColor: lightGrey,
@@ -56,51 +63,6 @@ const styles = {
   buttonsContainer: {
     display: "flex",
     alignItems: "center",
-  },
-  actionButton: {
-    padding: "8px 12px",
-    marginRight: "10px",
-    borderRadius: "4px",
-    cursor: "pointer",
-    textDecoration: "none",
-    color: "#ffffff",
-    fontWeight: "bold",
-    fontSize: "14px",
-  },
-  editButton: {
-    backgroundColor: green,
-  },
-  viewButton: {
-    backgroundColor: blue,
-  },
-  deleteButton: {
-    backgroundColor: red,
-  },
-  cardListContainer: {
-    display: "flex",
-    marginBottom: "20px",
-    alignItems: "center",
-  },
-  cardListButton: {
-    padding: "10px 20px",
-    marginRight: "10px",
-    borderRadius: "4px",
-    cursor: "pointer",
-    backgroundColor: lightBlue,
-    color: "#ffffff",
-    fontWeight: "bold",
-    fontSize: "16px",
-    border: "none",
-  },
-  cardListButtonActive: {
-    backgroundColor: green,
-  },
-  searchBox: {
-    marginLeft: "4px",
-    padding: "10px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    width: "300px",
   },
 };
 
@@ -151,10 +113,37 @@ const Me = () => {
           }
         };
 
-        const getCollections = async () => {
-          // Fetch collections similar to how posts are fetched
-          // For now, let's assume it's similar to posts fetching
-          return [];
+        const fetchCollections = async () => {
+          try {
+            const uid = await getUserId(username);
+            const db = await ref(getDatabase());
+            const readPath = `users/${uid}/Collections/`;
+
+            console.log(uid);
+
+            console.log(`Fetching Collections of ${username}, uid: ${uid}`);
+
+            const snapshot = await get(child(db, readPath));
+
+            if (!snapshot.exists()) {
+              console.error("Collections Not Found");
+              return [];
+            }
+
+            console.log("Collections Fetched");
+            const collectionsData = snapshot.val();
+            let collections = [];
+            Object.keys(collectionsData).forEach((key) => {
+              collections.push(key);
+            });
+
+            console.log(collections);
+            return collections;
+          } catch (err) {
+            console.error(err);
+            console.error("Failed to get Collections", username);
+            return [];
+          }
         };
 
         getPosts().then((postsData) => {
@@ -164,7 +153,7 @@ const Me = () => {
           setLoading(false);
         });
 
-        getCollections().then((collectionsData) => {
+        fetchCollections().then((collectionsData) => {
           setAllCollections(collectionsData);
           setCollections(collectionsData);
           setFilteredCollections(collectionsData);
@@ -196,7 +185,7 @@ const Me = () => {
     }
   }, [searchValue, viewingCard, allPosts, allCollections]);
 
-  const handleDelete = (postName) => {
+  const handleDeletePost = (postName) => {
     const doDelete = async () => {
       deletePost(postName).then(() => {
         setAllPosts(allPosts.filter((item) => item !== postName));
@@ -213,86 +202,38 @@ const Me = () => {
     }
   };
 
+  const handleDeleteCollection = (collectionName) => {
+    const performDeletion = async (collectionName) => {
+      deleteCollection(collectionName).then(() => {
+        setAllCollections(
+          allCollections.filter((item) => item !== collectionName)
+        );
+      });
+      console.log("Collection Deleted Successfully");
+    };
+
+    performDeletion(collectionName);
+  };
+
   const handleSearchChange = (event) => {
     setSearchValue(event.target.value);
   };
 
-  const CardList = () => {
-    return (
-      <div style={styles.cardListContainer}>
-        <button
-          onClick={() => setViewingCard("Posts")}
-          style={{
-            ...styles.cardListButton,
-            ...(viewingCard === "Posts" ? styles.cardListButtonActive : {}),
-          }}
-        >
-          Posts
-        </button>
-        <button
-          onClick={() => setViewingCard("Collections")}
-          style={{
-            ...styles.cardListButton,
-            ...(viewingCard === "Collections"
-              ? styles.cardListButtonActive
-              : {}),
-          }}
-        >
-          Collections
-        </button>
-        <input
-          type="text"
-          placeholder={
-            viewingCard === "Posts"
-              ? "Search posts..."
-              : "Search collections..."
-          }
-          style={styles.searchBox}
-          value={searchValue}
-          onChange={handleSearchChange}
-          ref={searchInputRef}
-          autoFocus
-        />
-      </div>
-    );
-  };
-
-  const PostsList = () => {
+  const ListView = () => {
     return (
       <div>
         {viewingCard === "Posts" ? (
-          <>
-            {filteredPosts.map((post, index) => (
-              <div style={styles.listItem} key={index}>
-                <span style={styles.postTitle}>{post}</span>
-                <div style={styles.buttonsContainer}>
-                  <Link
-                    to={`/viewpost/${post}`}
-                    style={{ ...styles.actionButton, ...styles.viewButton }}
-                  >
-                    View
-                  </Link>
-                  <Link
-                    to={`/editpost/${post}`}
-                    style={{ ...styles.actionButton, ...styles.editButton }}
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(post)}
-                    style={{ ...styles.actionButton, ...styles.deleteButton }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </>
+          <PostView
+            posts={filteredPosts}
+            handleDelete={handleDeletePost}
+            isCurrentUser={true}
+          />
         ) : (
           <CollectionsList
             isCurrentUser={true}
             username={userName}
             collections={filteredCollections}
+            handleDelete={handleDeleteCollection}
           />
         )}
       </div>
@@ -302,11 +243,16 @@ const Me = () => {
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>{userName}</h2>
-      <CardList />
+      <CardList
+        handleSearchChange={handleSearchChange}
+        viewingCard={viewingCard}
+        searchInputRef={searchInputRef}
+        setViewingCard={setViewingCard}
+      />
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <>{userName ? <PostsList /> : <p>User not found.</p>}</>
+        <>{userName ? <ListView /> : <p>User not found.</p>}</>
       )}
     </div>
   );

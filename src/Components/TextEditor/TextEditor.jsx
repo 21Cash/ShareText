@@ -45,9 +45,9 @@ const TextEditor = ({}) => {
   const styles = {
     textEditorContainer: {
       position: "relative",
-      padding: "16px",
+      padding: "30px",
       backgroundColor: "#f0f0f0",
-      paddingBottom: "200px",
+      marginBottom: "100px",
     },
     titleInput: {
       width: "99%",
@@ -59,8 +59,8 @@ const TextEditor = ({}) => {
       border: "1px solid #ccc",
     },
     textEditor: {
-      width: "97.4%",
-      minHeight: "300px",
+      width: "98%",
+      minHeight: "60vh",
       padding: "16px",
       paddingRight: "20px",
       fontSize: "18px",

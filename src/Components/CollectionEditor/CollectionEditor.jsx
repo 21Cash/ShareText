@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCollectionPosts, uploadCollection } from "../../REST";
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import {
   ref,
@@ -10,6 +10,7 @@ import {
   orderByChild,
   equalTo,
 } from "firebase/database";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const darkBlue = "#1e2a3a";
 const lightBlue = "#3f5176";
@@ -22,7 +23,7 @@ const white = "#ffffff";
 const styles = {
   container: {
     maxWidth: "1100px",
-    height: "75vh",
+    height: "80vh",
     margin: "0 auto 50px",
     padding: "3px 20px 20px 20px",
     borderRadius: "8px",
@@ -38,6 +39,7 @@ const styles = {
     fontSize: "32px",
     fontWeight: "bold",
     color: green,
+    // color: "#3498db",
   },
   listItem: {
     marginBottom: "15px",
@@ -79,23 +81,35 @@ const styles = {
   },
   button: {
     cursor: "pointer",
-    padding: "5px",
+    padding: "8px 12px",
     borderRadius: "4px",
     border: "none",
     color: white,
     backgroundColor: green,
     fontSize: "16px",
     marginLeft: "10px",
+    transition: "background-color 0.3s, transform 0.2s",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   removeButton: {
     cursor: "pointer",
-    padding: "5px",
+    padding: "8px 12px",
+    fontWeight: "bold",
     borderRadius: "4px",
     border: "none",
-    color: white,
+    color: "white",
     backgroundColor: red,
     fontSize: "16px",
     marginLeft: "10px",
+    transition: "background-color 0.3s, transform 0.2s",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonIcon: {
+    fontSize: "18px",
   },
   input: {
     width: "98%",
@@ -113,7 +127,8 @@ const styles = {
     borderRadius: "4px",
     border: "none",
     color: white,
-    backgroundColor: green,
+    // backgroundColor: green,
+    backgroundColor: "#3498db",
     fontSize: "16px",
   },
 };
@@ -126,6 +141,7 @@ const CollectionEditor = ({ isNewPost = false }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [collectionName, setCollectionName] = useState(initialCollectionName);
   const navigate = useNavigate();
+
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -161,7 +177,6 @@ const CollectionEditor = ({ isNewPost = false }) => {
               );
               setPosts(collectionPosts);
 
-              // Remove collection posts from all posts
               const filteredPosts = postKeys.filter(
                 (post) => !collectionPosts.includes(post)
               );
@@ -232,6 +247,38 @@ const CollectionEditor = ({ isNewPost = false }) => {
       });
   };
 
+  const onDragEnd = (result) => {
+    const { destination, source, draggableId, type } = result;
+
+    if (!destination) return;
+
+    if (type === "post") {
+      if (
+        destination.droppableId === source.droppableId &&
+        destination.index === source.index
+      ) {
+        return;
+      }
+
+      const updatedList = Array.from(
+        source.droppableId === "allPosts" ? filteredPosts : posts
+      );
+      updatedList.splice(source.index, 1);
+      updatedList.splice(destination.index, 0, draggableId);
+
+      if (source.droppableId === "allPosts") {
+        setAllPosts(updatedList);
+      } else {
+        setPosts(updatedList);
+      }
+    } else if (type === "collection") {
+      const updatedPosts = Array.from(posts);
+      updatedPosts.splice(source.index, 1);
+      updatedPosts.splice(destination.index, 0, draggableId);
+      setPosts(updatedPosts);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>
@@ -255,35 +302,82 @@ const CollectionEditor = ({ isNewPost = false }) => {
         onChange={handleSearch}
         style={styles.searchInput}
       />
-      <div style={styles.listContainer}>
-        <div style={styles.list}>
-          <h2>All Posts</h2>
-          {filteredPosts.length === 0 && <p>No posts available.</p>}
-          {filteredPosts.map((post) => (
-            <div key={post} style={styles.listItem}>
-              <span style={styles.postTitle}>{post}</span>
-              <button style={styles.button} onClick={() => addPost(post)}>
-                ✔
-              </button>
-            </div>
-          ))}
-        </div>
-        <div style={styles.list}>
-          <h2>Selected Posts</h2>
-          {posts.length === 0 && <p>No posts in collection.</p>}
-          {posts.map((post) => (
-            <div key={post} style={styles.listItem}>
-              <span style={styles.postTitle}>{post}</span>
-              <button
-                style={styles.removeButton}
-                onClick={() => removePost(post)}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div style={styles.listContainer}>
+          <Droppable droppableId="allPosts" type="post">
+            {(provided) => (
+              <div
+                style={styles.list}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
               >
-                ❌
-              </button>
-            </div>
-          ))}
+                <h2>All Posts</h2>
+                {filteredPosts.length === 0 && <p>No posts available.</p>}
+                {filteredPosts.map((post, index) => (
+                  <Draggable key={post} draggableId={post} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{
+                          ...styles.listItem,
+                          ...provided.draggableProps.style,
+                        }}
+                      >
+                        <span style={styles.postTitle}>{post}</span>
+                        <button
+                          style={styles.button}
+                          onClick={() => addPost(post)}
+                        >
+                          ✔
+                        </button>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+          <Droppable droppableId="selectedPosts" type="collection">
+            {(provided) => (
+              <div
+                style={styles.list}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                <h2>Selected Posts</h2>
+                {posts.length === 0 && <p>No posts in collection.</p>}
+                {posts.map((post, index) => (
+                  <Draggable key={post} draggableId={post} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{
+                          ...styles.listItem,
+                          ...provided.draggableProps.style,
+                        }}
+                      >
+                        <span style={styles.postTitle}>{post}</span>
+                        <button
+                          style={styles.removeButton}
+                          onClick={() => removePost(post)}
+                        >
+                          X
+                        </button>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         </div>
-      </div>
+      </DragDropContext>
       <button style={styles.submitButton} onClick={handleSubmit}>
         {isNewPost ? "Submit Collection" : "Upload Collection"}
       </button>

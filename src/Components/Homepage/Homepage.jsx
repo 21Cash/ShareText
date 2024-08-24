@@ -8,6 +8,7 @@ const Homepage = () => {
       <PostSearcher />
       <ProfileViewer />
       <CreatePostButton />
+      <CreateCollection />
     </div>
   );
 };
@@ -32,7 +33,7 @@ const PostSearcher = () => {
     container: {
       maxWidth: "400px",
       margin: "20px auto",
-      padding: "20px",
+      padding: "10px",
       border: "1px solid #ccc",
       borderRadius: "8px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -72,6 +73,62 @@ const PostSearcher = () => {
 
       <button style={styles.viewPostButton} onClick={handleViewPost}>
         View Post
+      </button>
+    </div>
+  );
+};
+
+const CreateCollection = () => {
+  const navigate = useNavigate();
+  const [isPressed, setIsPressed] = useState(false);
+
+  const redirectToTextEditor = () => {
+    navigate("/CreateCollection");
+  };
+
+  const styles = {
+    createPostButtonContainer: {
+      textAlign: "center",
+    },
+    CreateCollection: {
+      marginTop: "50px",
+      padding: "30px 60px",
+      fontSize: "28px",
+      backgroundColor: "#4caf50",
+      color: "#fff",
+      border: "none",
+      borderRadius: "15px",
+      cursor: "pointer",
+      transition:
+        "background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
+      boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)",
+    },
+    createPostButtonHover: {
+      backgroundColor: "#45a049",
+      transform: "scale(1.05)",
+      boxShadow: "0px 12px 20px rgba(0, 0, 0, 0.2)",
+    },
+    createPostButtonPress: {
+      transform: "scale(0.95)",
+      boxShadow: "none",
+    },
+  };
+
+  return (
+    <div style={styles.createPostButtonContainer}>
+      <button
+        style={{
+          ...styles.CreateCollection,
+          ...(isPressed
+            ? styles.createPostButtonPress
+            : styles.createPostButtonHover),
+        }}
+        onClick={redirectToTextEditor}
+        onMouseDown={() => setIsPressed(true)}
+        onMouseUp={() => setIsPressed(false)}
+        onMouseLeave={() => setIsPressed(false)}
+      >
+        Create Collection
       </button>
     </div>
   );

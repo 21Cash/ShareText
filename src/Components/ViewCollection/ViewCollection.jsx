@@ -3,6 +3,12 @@ import { getCollectionPosts, getCollections } from "../../REST";
 import { useParams } from "react-router-dom";
 import PostsList from "../PostsList/PostsList";
 
+const styles = {
+  container: {
+    marginBottom: "90px",
+  },
+};
+
 const ViewCollection = () => {
   const { username, collectionName } = useParams();
   const [posts, setPosts] = useState(null);
@@ -22,9 +28,9 @@ const ViewCollection = () => {
   }, []);
 
   return (
-    <>
-      <PostsList header={collectionName} isCurrentViewer={true} posts={posts} />
-    </>
+    <div style={styles.container}>
+      <PostsList header={`Collection : ${collectionName}`} posts={posts} />
+    </div>
   );
 };
 
