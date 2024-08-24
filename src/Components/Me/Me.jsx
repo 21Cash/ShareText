@@ -8,12 +8,14 @@ import {
   query,
   orderByChild,
   equalTo,
+  refFromURL,
 } from "firebase/database";
 import { onValue } from "firebase/database";
 import "firebase/auth";
 import { Link } from "react-router-dom";
 import { getPost } from "../../REST";
 import { deletePost } from "../../REST";
+import CollectionsList from "../CollectionsList/CollectionsList";
 
 const darkBlue = "#1e2a3a";
 const lightBlue = "#3f5176";
@@ -85,6 +87,7 @@ const Me = () => {
   const [userName, setUserName] = useState("");
   const [userPosts, setUserPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [viewingCard, setViewingCard] = useState("Posts");
 
   useEffect(() => {
     const auth = getAuth();
@@ -153,46 +156,77 @@ const Me = () => {
     }
   };
 
+  const CardList = () => {
+    return (
+      <div>
+        <button
+          onClick={() => {
+            setViewingCard("Posts");
+          }}
+        >
+          {" "}
+          Posts{" "}
+        </button>
+        <button
+          onClick={() => {
+            setViewingCard("Collections");
+          }}
+        >
+          {" "}
+          Collections{" "}
+        </button>
+      </div>
+    );
+  };
+
+  const PostsList = () => {
+    return (
+      <div>
+        <h2 style={styles.heading}>{userName}</h2>
+        {/* <h3>My Posts:</h3> */}
+        <CardList />
+
+        {viewingCard == "Posts" ? (
+          <>
+            {userPosts.map((post, index) => (
+              <div style={styles.listItem} key={index}>
+                <span style={styles.postTitle}>{post}</span>
+                <div style={styles.buttonsContainer}>
+                  <Link
+                    to={`/viewpost/${post}`}
+                    style={{ ...styles.actionButton, ...styles.viewButton }}
+                  >
+                    View
+                  </Link>
+                  <Link
+                    to={`/editpost/${post}`}
+                    style={{ ...styles.actionButton, ...styles.editButton }}
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(post)}
+                    style={{ ...styles.actionButton, ...styles.deleteButton }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <CollectionsList isCurrentUser={true} username={userName} />
+        )}
+      </div>
+    );
+  };
+
   return (
     <div style={styles.container}>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <>
-          {userName ? (
-            <div>
-              <h2 style={styles.heading}>{userName}</h2>
-              <h3>My Posts:</h3>
-              {userPosts.map((post, index) => (
-                <div style={styles.listItem} key={index}>
-                  <span style={styles.postTitle}>{post}</span>
-                  <div style={styles.buttonsContainer}>
-                    <Link
-                      to={`/viewpost/${post}`}
-                      style={{ ...styles.actionButton, ...styles.viewButton }}
-                    >
-                      View
-                    </Link>
-                    <Link
-                      to={`/editpost/${post}`}
-                      style={{ ...styles.actionButton, ...styles.editButton }}
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(post)}
-                      style={{ ...styles.actionButton, ...styles.deleteButton }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>User not found.</p>
-          )}
-        </>
+        <>{userName ? <PostsList /> : <p>User not found.</p>}</>
       )}
     </div>
   );

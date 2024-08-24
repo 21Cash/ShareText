@@ -13,6 +13,8 @@ import Footer from "./Components/Footer/Footer";
 import ViewProfile from "./Components/ViewProfile/ViewProfile";
 import { Me } from "./Components/Me/Me";
 import { firebaseapp } from "./constants";
+import ViewCollection from "./Components/ViewCollection/ViewCollection";
+import CollectionEditor from "./Components/CollectionEditor/CollectionEditor";
 
 function App() {
   return (
@@ -35,6 +37,15 @@ function App() {
             <Route path="/profile/:username" element={<ViewProfile />} />
             <Route path="/PostCreated" element={<PostCreated />} />
             <Route path="/Me" element={<Me />} />
+            <Route
+              path="view-collection/:username/:collectionName"
+              element={<ViewCollection />}
+            />
+
+            <Route
+              path="/CollectionEditor/:collectionName"
+              element={<CollectionEditor />}
+            />
           </Routes>
         </div>
 

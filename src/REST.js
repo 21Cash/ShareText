@@ -1,5 +1,41 @@
-import { getDatabase, ref, set, get, child } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  child,
+  query,
+  orderByChild,
+  equalTo,
+  runTransaction,
+  refFromURL,
+} from "firebase/database";
 import { getAuth } from "firebase/auth";
+import { cloneElement, createRef } from "react";
+
+const getUserId = async (username) => {
+  try {
+    username = username.toLowerCase(); // fixed typo
+    const db = ref(getDatabase());
+    const readPath = `usernames/${username}`;
+
+    console.log(`Fetching UID of ${username}`);
+
+    const snapshot = await get(child(db, readPath));
+
+    if (!snapshot.exists()) {
+      console.error("Username Not Found");
+      return null;
+    }
+
+    const uid = snapshot.val();
+    return uid;
+  } catch (err) {
+    console.error(err);
+    console.error("Failed to get UID of username", username);
+    return null;
+  }
+};
 
 const UploadPost = async (postTitle, postText) => {
   const _auth = getAuth();
@@ -32,6 +68,7 @@ const UploadPost = async (postTitle, postText) => {
     return Promise.reject();
   }
 };
+
 const postPresent = async (postName) => {
   const dbRef = ref(getDatabase());
 
@@ -73,6 +110,7 @@ const getPost = async (postName) => {
     return Promise.reject(error);
   }
 };
+
 const deletePost = async (postName) => {
   try {
     const db = getDatabase();
@@ -83,4 +121,102 @@ const deletePost = async (postName) => {
   }
 };
 
-export { UploadPost, getPost, postPresent, deletePost };
+const getCollections = async (username) => {
+  try {
+    const uid = await getUserId(username);
+    const db = ref(getDatabase());
+    const readPath = `users/${uid}/Collections/`;
+
+    console.log(`Fetching Collections of ${username}, uid: ${uid}`);
+
+    const snapshot = await get(child(db, readPath));
+
+    if (!snapshot.exists()) {
+      console.error("Collections Not Found");
+      return null;
+    }
+
+    console.log("Collections Fetched");
+    const collectionsData = snapshot.val();
+    let collections = [];
+    Object.keys(collectionsData).forEach((key) => {
+      collections.push(key);
+    });
+
+    console.log(collections);
+    return collections;
+  } catch (err) {
+    console.error(err);
+    console.error("Failed to get Collections", username);
+    return null;
+  }
+};
+
+const getCollectionPosts = async (username, collectionName) => {
+  try {
+    const db = await ref(getDatabase());
+    const uid = await getUserId(username);
+
+    const readPath = `users/${uid}/Collections/${collectionName}`;
+
+    const snapshot = await get(child(db, readPath));
+
+    if (!snapshot.exists()) {
+      console.error(`No Collection Named : ${collectionName}`);
+      return null;
+    }
+    return snapshot.val().posts;
+  } catch (err) {
+    console.error(
+      `Failed to fetch Collection Posts, collectionName : ${collectionName}, username : ${username}`
+    );
+    return null;
+  }
+};
+
+const uploadCollection = async (collectionName, posts) => {
+  try {
+    const db = getDatabase();
+    const collectionItem = {
+      posts,
+    };
+
+    const auth = await getAuth();
+    const id = auth.currentUser.uid;
+
+    const write_path = `users/${id}/Collections/${collectionName}`;
+    await set(ref(db, write_path), collectionItem);
+
+    console.log("Collection Uploaded", collectionItem);
+  } catch (err) {
+    console.error(err);
+    console.error("Couldn't Update Collection.");
+  }
+};
+
+const deleteCollection = async (collectionName) => {
+  try {
+    const db = getDatabase();
+    const auth = await getAuth();
+    const id = auth.currentUser.uid;
+
+    const del_path = `users/${id}/Collections/${collectionName}`;
+    await set(ref(db, write_path), null);
+
+    console.log("Collection Deleted", collectionName);
+  } catch (err) {
+    console.error(err);
+    console.error("Couldn't Delete Collection.");
+  }
+};
+
+export {
+  UploadPost,
+  getPost,
+  postPresent,
+  deletePost,
+  uploadCollection,
+  getUserId,
+  getCollections,
+  getCollectionPosts,
+};

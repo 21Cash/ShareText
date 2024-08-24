@@ -95,24 +95,6 @@ const ViewProfile = () => {
     });
   }, []);
 
-  const fetchUserPosts = async (UID) => {
-    try {
-      const db = getDatabase();
-      const postsRef = ref(db, "posts");
-      const queryForUID = query(postsRef, orderByChild("uid"), equalTo(UID));
-      const snapshot = await get(queryForUID);
-      const postKeys = [];
-      snapshot.forEach((childSnapshot) => {
-        const postKey = childSnapshot.key;
-        postKeys.push(postKey);
-      });
-      return postKeys;
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      return [];
-    }
-  };
-
   return (
     <div style={styles.container}>
       {loading ? (
