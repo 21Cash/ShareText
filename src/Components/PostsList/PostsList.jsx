@@ -14,7 +14,7 @@ const styles = {
   container: {
     maxWidth: "900px",
     margin: "0 auto 50px",
-    padding: "3px 20px 20px 20px",
+    padding: "3px 35px 20px 35px",
     borderRadius: "8px",
     boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
     backgroundColor: darkBlue,
@@ -31,6 +31,12 @@ const styles = {
     fontSize: "20px",
     color: lightGrey,
     fontStyle: "italic",
+  },
+  horizontalLine: {
+    width: "100%",
+    border: "none",
+    borderTop: `1px solid black`,
+    marginBottom: "35px",
   },
   listItem: {
     marginBottom: "15px",
@@ -83,7 +89,12 @@ const PostsList = ({ header, isCurrentUser = false, posts = [] }) => {
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>{header}</h2>
-      {authorName && <p style={styles.authorName}>by {authorName}</p>}
+      {authorName && (
+        <>
+          <p style={styles.authorName}>by {authorName}</p>
+          <hr style={styles.horizontalLine} />
+        </>
+      )}
       {posts && posts.length > 0 ? (
         posts.map((post, index) => (
           <div style={styles.listItem} key={index}>

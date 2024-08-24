@@ -1,3 +1,5 @@
+import React from "react";
+
 const darkBlue = "#1e2a3a";
 const lightBlue = "#3f5176";
 const darkGrey = "#333333";
@@ -29,8 +31,10 @@ const styles = {
   },
   cardListContainer: {
     display: "flex",
-    marginBottom: "20px",
     alignItems: "center",
+    marginBottom: "20px",
+    paddingLeft: "15px",
+    paddingBottom: "5px",
   },
   cardListButton: {
     padding: "10px 20px",
@@ -53,6 +57,13 @@ const styles = {
     border: "1px solid #ccc",
     width: "300px",
   },
+  horizontalLine: {
+    width: "calc(100% - 40px)", // Adjust to make it shorter from left and right
+    border: "none",
+    borderTop: `1px solid black`,
+    // borderTop: `1px solid ${darkGrey}`,
+    marginBottom: "30px",
+  },
 };
 
 const CardList = ({
@@ -63,36 +74,43 @@ const CardList = ({
   setViewingCard,
 }) => {
   return (
-    <div style={styles.cardListContainer}>
-      <button
-        onClick={() => setViewingCard("Posts")}
-        style={{
-          ...styles.cardListButton,
-          ...(viewingCard === "Posts" ? styles.cardListButtonActive : {}),
-        }}
-      >
-        Posts
-      </button>
-      <button
-        onClick={() => setViewingCard("Collections")}
-        style={{
-          ...styles.cardListButton,
-          ...(viewingCard === "Collections" ? styles.cardListButtonActive : {}),
-        }}
-      >
-        Collections
-      </button>
-      <input
-        type="text"
-        placeholder={
-          viewingCard === "Posts" ? "Search posts..." : "Search collections..."
-        }
-        style={styles.searchBox}
-        value={searchValue}
-        onChange={handleSearchChange}
-        ref={searchInputRef}
-        autoFocus
-      />
+    <div>
+      <div style={styles.cardListContainer}>
+        <button
+          onClick={() => setViewingCard("Posts")}
+          style={{
+            ...styles.cardListButton,
+            ...(viewingCard === "Posts" ? styles.cardListButtonActive : {}),
+          }}
+        >
+          Posts
+        </button>
+        <button
+          onClick={() => setViewingCard("Collections")}
+          style={{
+            ...styles.cardListButton,
+            ...(viewingCard === "Collections"
+              ? styles.cardListButtonActive
+              : {}),
+          }}
+        >
+          Collections
+        </button>
+        <input
+          type="text"
+          placeholder={
+            viewingCard === "Posts"
+              ? "Search posts..."
+              : "Search collections..."
+          }
+          style={styles.searchBox}
+          value={searchValue}
+          onChange={handleSearchChange}
+          ref={searchInputRef}
+          autoFocus
+        />
+      </div>
+      <hr style={styles.horizontalLine} />
     </div>
   );
 };
