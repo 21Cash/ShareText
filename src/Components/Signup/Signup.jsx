@@ -52,7 +52,6 @@ const Signup = () => {
 
 const styles = {
   background: {
-    background: "#f0f0f0",
     height: "75vh",
     display: "flex",
     alignItems: "center",
@@ -60,8 +59,9 @@ const styles = {
     margin: 0,
   },
   container: {
-    background: "#ffffff",
-    padding: "30px", // Adjust the vertical padding as needed
+    backgroundColor: "#1a252f",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+    padding: "30px 60px 40px 60px",
     borderRadius: "5px",
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
     maxWidth: "400px",
@@ -69,6 +69,7 @@ const styles = {
     margin: "auto", // Center horizontally
   },
   heading: {
+    color: "White",
     textAlign: "center",
     marginTop: 0,
   },
@@ -78,6 +79,7 @@ const styles = {
   },
   label: {
     marginBottom: "8px",
+    color: "White",
   },
   input: {
     padding: "8px",
@@ -92,6 +94,7 @@ const styles = {
     border: "none",
     borderRadius: "3px",
     cursor: "pointer",
+    marginTop: "20px",
   },
 };
 

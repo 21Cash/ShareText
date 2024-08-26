@@ -26,7 +26,13 @@ function App() {
         <Navbar />
 
         {/* Add padding or margin to create space for the Navbar */}
-        <div style={{ paddingTop: "70px", paddingBottom: "20px" }}>
+        <div
+          style={{
+            paddingTop: "70px",
+            paddingBottom: "20px",
+            background: "",
+          }}
+        >
           <Routes>
             <Route path="" element={<Homepage />} />
             <Route path="/" element={<Navigate to="" />} />

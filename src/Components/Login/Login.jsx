@@ -53,7 +53,6 @@ const Login = () => {
 
 const styles = {
   background: {
-    background: "#f0f0f0",
     height: "75vh",
     display: "flex",
     alignItems: "center",
@@ -61,16 +60,18 @@ const styles = {
     margin: 0,
   },
   container: {
-    background: "#ffffff",
-    padding: "30px",
+    backgroundColor: "#1a252f",
+    padding: "30px 60px 40px 60px",
     borderRadius: "5px",
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
     maxWidth: "400px",
     width: "100%",
     margin: "auto",
+    boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
   },
   heading: {
     textAlign: "center",
+    color: "white",
     marginTop: 0,
   },
   form: {
@@ -79,6 +80,7 @@ const styles = {
   },
   label: {
     marginBottom: "8px",
+    color: "white",
   },
   input: {
     padding: "8px",
@@ -87,6 +89,7 @@ const styles = {
     borderRadius: "3px",
   },
   button: {
+    marginTop: "20px",
     backgroundColor: "#4caf50",
     color: "white",
     padding: "10px",

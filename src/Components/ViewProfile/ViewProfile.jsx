@@ -29,7 +29,7 @@ const white = "#ffffff";
 const styles = {
   container: {
     maxWidth: "900px",
-    margin: "0 auto 50px",
+    margin: "30px auto 50px",
     padding: "3px 20px 20px 20px",
     borderRadius: "8px",
     boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",

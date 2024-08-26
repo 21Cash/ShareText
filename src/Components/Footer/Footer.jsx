@@ -2,9 +2,11 @@ import React from "react";
 
 const footerStyles = {
   container: {
-    backgroundColor: "#2c3e50",
+    background: "linear-gradient(270deg, #2c3e50, #1a1a1a, #2c3e50)",
+    backgroundSize: "400% 400%",
+    animation: "gradientTransition 15s ease infinite",
     color: "#ecf0f1",
-    padding: "15px 20px",
+    padding: "10px 20px",
     textAlign: "center",
     position: "fixed",
     bottom: "0",
@@ -13,7 +15,7 @@ const footerStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    gap: "20px",
+    gap: "10px",
   },
   copyright: {
     fontSize: "14px",
@@ -34,13 +36,18 @@ const Footer = () => {
   return (
     <footer style={footerStyles.container}>
       <p style={footerStyles.copyright}>
-        &copy; {currentYear} Made With ❤ by Sushil L.
+        &copy; {currentYear} | Made With ❤ by Sushil L.
       </p>
       <a
         href="https://github.com/21ThousandProof/ShareText"
         target="_blank"
         rel="noopener noreferrer"
         style={footerStyles.link}
+        onMouseEnter={(e) =>
+          (e.target.style.textDecoration =
+            footerStyles.linkHover.textDecoration)
+        }
+        onMouseLeave={(e) => (e.target.style.textDecoration = "none")}
       >
         View Source Code
       </a>

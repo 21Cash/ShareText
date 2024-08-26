@@ -6,6 +6,7 @@ import PostsList from "../PostsList/PostsList";
 const styles = {
   container: {
     marginBottom: "90px",
+    marginTop: "30px",
   },
 };
 

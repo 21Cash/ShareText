@@ -9,28 +9,29 @@ const red = "#f44336";
 const green = "#4caf50";
 const blue = "#2196f3";
 const white = "#ffffff";
-
 const styles = {
   container: {
     maxWidth: "900px",
     margin: "0 auto 50px",
-    padding: "3px 35px 20px 35px",
+    padding: "1px 35px 20px 35px",
     borderRadius: "8px",
     boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
     backgroundColor: darkBlue,
     color: "#ffffff",
   },
   heading: {
-    marginBottom: "5px",
+    marginBottom: "10px", // Adjusted marginBottom to decrease the gap
     fontSize: "32px",
     fontWeight: "bold",
     color: green,
   },
   authorName: {
+    marginTop: "0", // Ensure there's no marginTop if needed
     marginBottom: "20px",
     fontSize: "20px",
     color: lightGrey,
     fontStyle: "italic",
+    fontFamily: "Times New Roman, serif",
   },
   horizontalLine: {
     width: "100%",

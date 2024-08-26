@@ -2,24 +2,6 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { postPresent } from "../../REST";
 
-const Homepage = () => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        paddingTop: "70px",
-        paddingBottom: "35px",
-      }}
-    >
-      <PostSearcher />
-      <ProfileViewer />
-      <CreatePostButton />
-      <CreateCollection />
-    </div>
-  );
-};
-
 const PostSearcher = () => {
   const [postName, setPostName] = useState("");
   const navigate = useNavigate();
@@ -40,17 +22,22 @@ const PostSearcher = () => {
     container: {
       maxWidth: "400px",
       margin: "20px auto",
-      padding: "10px",
-      border: "1px solid #ccc",
+      padding: "20px",
+      border: "1px solid #555",
       borderRadius: "8px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
       textAlign: "center",
+      backgroundColor: "#1F2A36",
     },
     postNameInput: {
       width: "100%",
       padding: "10px",
       fontSize: "16px",
       marginBottom: "10px",
+      borderRadius: "4px",
+      border: "1px solid #555",
+      backgroundColor: "#2C3E50",
+      color: "#FFFFFF",
       boxSizing: "border-box",
     },
     viewPostButton: {
@@ -63,6 +50,9 @@ const PostSearcher = () => {
       borderRadius: "4px",
       cursor: "pointer",
       transition: "background-color 0.3s",
+    },
+    viewPostButtonHover: {
+      backgroundColor: "#2980b9",
     },
   };
 
@@ -77,8 +67,18 @@ const PostSearcher = () => {
         onChange={(e) => setPostName(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-
-      <button style={styles.viewPostButton} onClick={handleViewPost}>
+      <button
+        style={styles.viewPostButton}
+        onClick={handleViewPost}
+        onMouseOver={(e) =>
+          (e.currentTarget.style.backgroundColor =
+            styles.viewPostButtonHover.backgroundColor)
+        }
+        onMouseOut={(e) =>
+          (e.currentTarget.style.backgroundColor =
+            styles.viewPostButton.backgroundColor)
+        }
+      >
         View Post
       </button>
     </div>
@@ -89,48 +89,46 @@ const CreateCollection = () => {
   const navigate = useNavigate();
   const [isPressed, setIsPressed] = useState(false);
 
-  const redirectToTextEditor = () => {
+  const redirectToCollectionEditor = () => {
     navigate("/CreateCollection");
   };
 
   const styles = {
-    createPostButtonContainer: {
+    buttonContainer: {
       textAlign: "center",
     },
-    CreateCollection: {
+    button: {
       marginTop: "50px",
       padding: "30px 60px",
       fontSize: "28px",
-      backgroundColor: "#4caf50",
+      backgroundColor: "#3498db",
       color: "#fff",
       border: "none",
       borderRadius: "15px",
       cursor: "pointer",
       transition:
         "background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
-      boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)",
+      boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.3)",
     },
-    createPostButtonHover: {
-      backgroundColor: "#45a049",
+    buttonHover: {
+      backgroundColor: "#2980b9",
       transform: "scale(1.05)",
-      boxShadow: "0px 12px 20px rgba(0, 0, 0, 0.2)",
+      boxShadow: "0px 12px 20px rgba(0, 0, 0, 0.4)",
     },
-    createPostButtonPress: {
+    buttonPress: {
       transform: "scale(0.95)",
       boxShadow: "none",
     },
   };
 
   return (
-    <div style={styles.createPostButtonContainer}>
+    <div style={styles.buttonContainer}>
       <button
         style={{
-          ...styles.CreateCollection,
-          ...(isPressed
-            ? styles.createPostButtonPress
-            : styles.createPostButtonHover),
+          ...styles.button,
+          ...(isPressed ? styles.buttonPress : styles.buttonHover),
         }}
-        onClick={redirectToTextEditor}
+        onClick={redirectToCollectionEditor}
         onMouseDown={() => setIsPressed(true)}
         onMouseUp={() => setIsPressed(false)}
         onMouseLeave={() => setIsPressed(false)}
@@ -150,41 +148,39 @@ const CreatePostButton = () => {
   };
 
   const styles = {
-    createPostButtonContainer: {
+    buttonContainer: {
       textAlign: "center",
     },
-    createPostButton: {
-      marginTop: "20px", // Add margin to separate it from the View Post box
+    button: {
+      marginTop: "20px",
       padding: "30px 60px",
       fontSize: "28px",
-      backgroundColor: "#4caf50",
+      backgroundColor: "#3498db",
       color: "#fff",
       border: "none",
       borderRadius: "15px",
       cursor: "pointer",
       transition:
         "background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
-      boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.1)",
+      boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.3)",
     },
-    createPostButtonHover: {
-      backgroundColor: "#45a049",
+    buttonHover: {
+      backgroundColor: "#2980b9",
       transform: "scale(1.05)",
-      boxShadow: "0px 12px 20px rgba(0, 0, 0, 0.2)",
+      boxShadow: "0px 12px 20px rgba(0, 0, 0, 0.4)",
     },
-    createPostButtonPress: {
+    buttonPress: {
       transform: "scale(0.95)",
       boxShadow: "none",
     },
   };
 
   return (
-    <div style={styles.createPostButtonContainer}>
+    <div style={styles.buttonContainer}>
       <button
         style={{
-          ...styles.createPostButton,
-          ...(isPressed
-            ? styles.createPostButtonPress
-            : styles.createPostButtonHover),
+          ...styles.button,
+          ...(isPressed ? styles.buttonPress : styles.buttonHover),
         }}
         onClick={redirectToTextEditor}
         onMouseDown={() => setIsPressed(true)}
@@ -210,34 +206,42 @@ const ProfileViewer = () => {
       maxWidth: "400px",
       margin: "10px auto",
       padding: "20px",
-      border: "1px solid #ccc",
+      border: "1px solid #555",
       borderRadius: "8px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
       textAlign: "center",
+      backgroundColor: "#1F2A36",
     },
     profileNameInput: {
       width: "70%",
       padding: "10px",
       fontSize: "16px",
       marginBottom: "10px",
-      boxSizing: "border-box",
+      borderRadius: "4px",
+      border: "1px solid #555",
+      backgroundColor: "#2C3E50",
+      color: "#FFFFFF",
     },
     viewProfileButton: {
       width: "25%",
-      padding: "7px",
+      padding: "10px",
       fontSize: "18px",
       backgroundColor: "#3498db",
       color: "#fff",
       border: "none",
       cursor: "pointer",
-      borderRadius: "2px",
+      borderRadius: "4px",
       transition: "background-color 0.3s",
       marginLeft: "5px",
     },
+    viewProfileButtonHover: {
+      backgroundColor: "#2980b9",
+    },
   };
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      navigate(`/profile/${profileName}`);
+      handleViewProfile();
     }
   };
 
@@ -249,13 +253,42 @@ const ProfileViewer = () => {
         placeholder="Enter Profile Name"
         value={profileName}
         onChange={(e) => setProfileName(e.target.value)}
-        onKeyPress={handleKeyPress} // Add this line to handle Enter key press
+        onKeyPress={handleKeyPress}
       />
-      <Link to={`/profile/${profileName}`}>
-        <button style={styles.viewProfileButton} onClick={handleViewProfile}>
-          &#10140; {/* Unicode for right arrow */}
-        </button>
-      </Link>
+      <button
+        style={styles.viewProfileButton}
+        onClick={handleViewProfile}
+        onMouseOver={(e) =>
+          (e.currentTarget.style.backgroundColor =
+            styles.viewProfileButtonHover.backgroundColor)
+        }
+        onMouseOut={(e) =>
+          (e.currentTarget.style.backgroundColor =
+            styles.viewProfileButton.backgroundColor)
+        }
+      >
+        Go
+      </button>
+    </div>
+  );
+};
+
+const Homepage = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        paddingTop: "45px",
+        paddingBottom: "35px",
+        backgroundColor: "#121720",
+        color: "#FFFFFF",
+      }}
+    >
+      <PostSearcher />
+      <ProfileViewer />
+      <CreatePostButton />
+      <CreateCollection />
     </div>
   );
 };

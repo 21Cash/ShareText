@@ -25,7 +25,7 @@ const styles = {
     maxWidth: "1100px",
     height: "80vh",
     margin: "0 auto 50px",
-    padding: "3px 20px 20px 20px",
+    padding: "0px 40px 30px 40px",
     borderRadius: "8px",
     boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
     backgroundColor: darkBlue,
@@ -66,14 +66,14 @@ const styles = {
   listContainer: {
     display: "flex",
     justifyContent: "space-between",
-    gap: "20px",
+    gap: "40px",
     height: "100%",
     overflow: "hidden",
   },
   list: {
     flex: 1,
     backgroundColor: lightBlue,
-    padding: "10px",
+    padding: "0px 30px 0px 30px",
     borderRadius: "8px",
     minHeight: "0",
     overflowY: "auto",
@@ -294,7 +294,7 @@ const CollectionEditor = ({ isNewPost = false }) => {
       <h1 style={styles.heading}>
         {isNewPost
           ? "Create New Collection"
-          : `Edit Collection: ${collectionName}`}
+          : `Editing Collection: ${collectionName}`}
       </h1>
       {isNewPost && (
         <input
@@ -321,7 +321,7 @@ const CollectionEditor = ({ isNewPost = false }) => {
                 {...provided.droppableProps}
                 style={styles.list}
               >
-                <h2>All Posts</h2>
+                <h3>All Posts</h3>
                 {filteredPosts.map((post, index) => (
                   <Draggable
                     key={getUniqueId(post, index)}
@@ -360,7 +360,7 @@ const CollectionEditor = ({ isNewPost = false }) => {
                 {...provided.droppableProps}
                 style={styles.list}
               >
-                <h2>Current Collection</h2>
+                <h3>Current Collection</h3>
                 {posts.map((post, index) => (
                   <Draggable
                     key={getUniqueId(post, index)}

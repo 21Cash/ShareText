@@ -1,9 +1,8 @@
-import React, { useState, useRef } from "react";
-import { useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { UploadPost, getPost } from "../../REST";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const TextEditor = ({}) => {
+const TextEditor = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [pressed, setPressed] = useState(false);
@@ -46,7 +45,8 @@ const TextEditor = ({}) => {
     textEditorContainer: {
       position: "relative",
       padding: "30px",
-      backgroundColor: "#f0f0f0",
+      backgroundColor: "#121720",
+      color: "#FFFFFF",
       marginBottom: "100px",
     },
     titleInput: {
@@ -54,9 +54,11 @@ const TextEditor = ({}) => {
       marginBottom: "8px",
       padding: "8px",
       fontSize: "18px",
-      fontFamily: "Arial, sans-serif",
+      fontFamily: "Roboto, sans-serif",
       borderRadius: "4px",
-      border: "1px solid #ccc",
+      border: "1px solid #555",
+      backgroundColor: "#1F2A36",
+      color: "#FFFFFF",
     },
     textEditor: {
       width: "98%",
@@ -64,26 +66,28 @@ const TextEditor = ({}) => {
       padding: "16px",
       paddingRight: "20px",
       fontSize: "18px",
-      fontFamily: "Arial, sans-serif",
+      fontFamily: "Roboto, sans-serif",
       borderRadius: "8px",
-      border: "1px solid #ccc",
+      border: "1px solid #555",
       outline: "none",
       resize: "vertical",
+      backgroundColor: "#1F2A36",
+      color: "#FFFFFF",
     },
     createPostButton: {
       marginTop: "16px",
       marginLeft: "8px",
       padding: "12px",
       fontSize: "18px",
-      backgroundColor: "#4CAF50",
-      color: "white",
+      backgroundColor: "#3498db",
+      color: "#FFFFFF",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
-      transition: "transform 0.3s", // Add transition for a smooth effect
+      transition: "transform 0.3s",
     },
     createPostButtonPressed: {
-      transform: "scale(0.95)", // Decrease size when pressed
+      transform: "scale(0.95)",
     },
   };
 
@@ -119,7 +123,7 @@ const TextEditor = ({}) => {
           onMouseDown={() => setPressed(true)}
           onMouseUp={() => setPressed(false)}
         >
-          {editMode ? <>UpdatePost</> : <>Create Post</>}
+          {editMode ? "Update Post" : "Create Post"}
         </button>
       </div>
     </div>
