@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const darkBlue = "#1e2a3a";
 const lightBlue = "#3f5176";
@@ -81,7 +81,7 @@ const styles = {
 
 const PostsList = ({ header, isCurrentUser = false, posts = [] }) => {
   const [authorName] = useState(useParams().username || "Anonymous");
-
+  const navigate = useNavigate();
   const handleDelete = (post) => {
     console.log(`Deleting post: ${post}`);
   };
@@ -100,20 +100,24 @@ const PostsList = ({ header, isCurrentUser = false, posts = [] }) => {
           <div style={styles.listItem} key={index}>
             <span style={styles.postTitle}>{post}</span>
             <div style={styles.buttonsContainer}>
-              <Link
-                to={`/viewpost/${post}`}
+              <button
+                onClick={() => {
+                  navigate(`/viewpost/${post}`);
+                }}
                 style={{ ...styles.actionButton, ...styles.viewButton }}
               >
                 View
-              </Link>
+              </button>
               {isCurrentUser && (
                 <>
-                  <Link
-                    to={`/editpost/${post}`}
+                  <button
+                    onClick={() => {
+                      navigate(`/editpost/${post}`);
+                    }}
                     style={{ ...styles.actionButton, ...styles.editButton }}
                   >
                     Edit
-                  </Link>
+                  </button>
                   <button
                     onClick={() => handleDelete(post)}
                     style={{ ...styles.actionButton, ...styles.deleteButton }}

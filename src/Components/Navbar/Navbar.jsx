@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Navbar = () => {
   const [userName, setUserName] = useState("");
-
+  const navigate = useNavigate();
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -34,9 +34,14 @@ const Navbar = () => {
             <a href="/Logout" style={styles.link}>
               Logout
             </a>
-            <Link to="/Me" style={styles.profileButton}>
+            <button
+              onClick={() => {
+                navigate("/Me");
+              }}
+              style={styles.profileButton}
+            >
               {userName}
-            </Link>
+            </button>
           </>
         ) : (
           <>

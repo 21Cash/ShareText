@@ -4,7 +4,14 @@ import { postPresent } from "../../REST";
 
 const Homepage = () => {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        paddingTop: "70px",
+        paddingBottom: "35px",
+      }}
+    >
       <PostSearcher />
       <ProfileViewer />
       <CreatePostButton />

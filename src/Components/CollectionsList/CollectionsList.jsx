@@ -88,12 +88,14 @@ const CollectionsList = ({
           <div key={index} style={styles.listItem}>
             <span style={styles.postTitle}>{collection}</span>
             <div style={styles.buttonsContainer}>
-              <Link
-                to={`/${username}/Collections/${collection}`}
+              <button
+                onClick={() => {
+                  navigate(`/${username}/Collections/${collection}`);
+                }}
                 style={{ ...styles.actionButton, ...styles.viewButton }}
               >
                 View
-              </Link>
+              </button>
               {isCurrentUser && (
                 <>
                   <button

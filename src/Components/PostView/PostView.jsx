@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const darkGrey = "#333333";
 const lightGrey = "#f5f5f5";
@@ -52,26 +52,31 @@ const styles = {
 };
 
 const PostView = ({ posts, handleDelete, isCurrentUser = false }) => {
+  const navigate = useNavigate();
   return (
     <div>
       {posts.map((post, index) => (
         <div style={styles.listItem} key={index}>
           <span style={styles.postTitle}>{post}</span>
           <div style={styles.buttonsContainer}>
-            <Link
-              to={`/viewpost/${post}`}
+            <button
+              onClick={() => {
+                navigate(`/viewpost/${post}`);
+              }}
               style={{ ...styles.actionButton, ...styles.viewButton }}
             >
               View
-            </Link>
+            </button>
             {isCurrentUser && (
               <>
-                <Link
-                  to={`/editpost/${post}`}
+                <button
+                  onClick={() => {
+                    navigate(`/editpost/${post}`);
+                  }}
                   style={{ ...styles.actionButton, ...styles.editButton }}
                 >
                   Edit
-                </Link>
+                </button>
                 <button
                   onClick={() => handleDelete(post)}
                   style={{ ...styles.actionButton, ...styles.deleteButton }}

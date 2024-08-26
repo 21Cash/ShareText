@@ -16,10 +16,12 @@ import { firebaseapp } from "./constants";
 import ViewCollection from "./Components/ViewCollection/ViewCollection";
 import CollectionEditor from "./Components/CollectionEditor/CollectionEditor";
 import MessageScreen from "./Components/MessageScreen/MessageScreen";
+import GlobalStyle from "./GlobalStyles";
 
 function App() {
   return (
     <BrowserRouter>
+      <GlobalStyle />
       <div style={{ maxHeight: "100vh", position: "relative" }}>
         <Navbar />
 

@@ -33,7 +33,7 @@ const CardList = ({
     marginBottom: "20px",
     paddingLeft: "15px",
     paddingBottom: "5px",
-    flexDirection: isMobile ? "column" : "row", // Column on mobile, row on desktop
+    flexDirection: isMobile ? "column" : "row",
   };
 
   const buttonStyle = {
@@ -46,10 +46,10 @@ const CardList = ({
     fontWeight: "bold",
     fontSize: "16px",
     border: "none",
-    width: isMobile ? "100%" : "auto", // Full width on mobile, auto on desktop
+    width: isMobile ? "100%" : "auto",
     textAlign: "center",
-    boxSizing: "border-box", // Ensures padding is included in width
-    marginBottom: isMobile ? "10px" : "0", // Space between buttons on mobile
+    boxSizing: "border-box",
+    marginBottom: isMobile ? "10px" : "0",
   };
 
   const searchBoxStyle = {
@@ -57,9 +57,9 @@ const CardList = ({
     padding: "10px",
     borderRadius: "4px",
     border: "1px solid #ccc",
-    width: isMobile ? "100%" : "300px", // Full width on mobile
-    marginTop: isMobile ? "10px" : "0", // Margin top for mobile
-    boxSizing: "border-box", // Ensures padding is included in width
+    width: isMobile ? "100%" : "300px",
+    marginTop: isMobile ? "10px" : "0",
+    boxSizing: "border-box",
   };
 
   return (
