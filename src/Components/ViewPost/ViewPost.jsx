@@ -80,6 +80,7 @@ const textAreaStyle = {
   whiteSpace: "pre",
   backgroundColor: "#1F2A36",
   color: "#FFFFFF",
+  tabSize: 4,
 };
 
 const buttonWrapperStyle = {
